@@ -1,0 +1,47 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "compounds": [
+    {
+      "name": "Compound",
+      "configurations": [
+        "Project1"
+      ]
+    }
+  ],
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach (Inspector Protocol)",
+      "port": 9229,
+      "protocol": "inspector"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "protocol": "legacy",
+      "name": "Jest (Legacy)",
+      "cwd": "${workspaceRoot}",
+      "stopOnEntry": false,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--debug-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "-i",
+        "-c", ".jestrc"
+      ],
+      "smartStep": true,
+      "outDir": null,
+      "sourceMaps": true,
+      "port": 5858,
+      "address": "127.0.0.1",
+      "skipFiles": [
+        "<node_internals>/**/*.js",
+        "node_modules/**/*.js"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+	"extends":[
+    "tslint:latest",
+    "tslint-eslint-rules"
+  ],
+  "rules": {
+    "quotemark": ["single"],
+    "only-arrow-functions": [false],
+    "curly": false,
+    "object-curly-spacing": [ true, "always" ],
+    "space-in-parens": [true, "never"],
+    "no-multi-spaces": [true],
+    "object-literal-sort-keys": false
+  }
+}
