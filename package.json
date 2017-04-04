@@ -30,12 +30,14 @@
     "typescript": "^2.2.2"
   },
   "dependencies": {
+    "@jdw/jst": "^1.0.0-beta.10",
     "@types/bluebird": "^3.5.2",
     "@types/fs-promise": "^1.0.1",
     "@types/js-yaml": "^3.5.29",
     "bluebird": "^3.5.0",
     "fs-promise": "^2.0.2",
     "js-yaml": "^3.8.2",
-    "lutils": "^1.2.5"
+    "lutils": "^1.2.5",
+    "uuid": "^3.0.1"
   }
 }
