@@ -1,28 +1,34 @@
+import * as c from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
-import { merge } from 'lutils';
 import DocumentGenerator from './generate';
+import { IConfigType } from './types';
+import { merge } from './utils';
 
-class ServerlessOpenAPIDocumentation {
+export default class ServerlessOpenAPIDocumentation {
   public hooks;
   public commands;
+  /** Serverless Instance */
   private serverless;
+  /** CLI options */
   private options;
-  private provider;
+  /** Serverless Service Custom vars */
   private customVars;
-  private getMethodLogicalId;
-  private normalizePath;
 
+  /**
+   * Constructor
+   * @param serverless
+   * @param options
+   */
   constructor(serverless, options) {
+    // pull the serverless instance into our class vars
     this.serverless = serverless;
+    // pull the CLI options into our class vars
     this.options = options;
-    this.provider = 'aws';
-
+    // Serverless service custom variables
     this.customVars = this.serverless.variables.service.custom;
-    const naming = this.serverless.providers.aws.naming;
-    this.getMethodLogicalId = naming.getMethodLogicalId.bind(naming);
-    this.normalizePath = naming.normalizePath.bind(naming);
 
+    // Declare the commands this plugin exposes for the Serverless CLI
     this.commands = {
       openapi: {
         commands: {
@@ -50,57 +56,82 @@ class ServerlessOpenAPIDocumentation {
       },
     };
 
+    // Declare the hooks our plugin is interested in
     this.hooks = {
-      // 'before:deploy:deploy': this.beforeDeploy.bind(this),
-      // 'after:deploy:deploy': this.afterDeploy.bind(this),
-      'openapi:generate:serverless': this.beforeDeploy.bind(this),
+      'openapi:generate:serverless': this.generate.bind(this),
     };
   }
 
-  private beforeDeploy(e) {
-    const indent = this.serverless.processedInput.options.indent || 2;
-    const outputFormat = this.serverless.processedInput.options.format || 'yaml';
+  /**
+   * Processes CLI input by reading the input from serverless
+   * @returns config IConfigType
+   */
+  private processCliInput(): IConfigType {
+    const config: IConfigType = {
+      format: 'yaml',
+      file: 'openapi.yml',
+      indent: 2,
+    };
 
-    if (['yaml', 'json'].indexOf(outputFormat.toLowerCase()) < 0) {
+    config.indent = this.serverless.processedInput.options.indent || 2;
+    config.format = this.serverless.processedInput.options.format || 'yaml';
+
+    if (['yaml', 'json'].indexOf(config.format.toLowerCase()) < 0) {
       throw new Error('Invalid Output Format Specified - must be one of "yaml" or "json"');
     }
 
-    let outputFile = this.serverless.processedInput.options.output;
+    config.file = this.serverless.processedInput.options.output ||
+      ((config.format === 'yaml') ? 'openapi.yml' : 'openapi.json');
 
+    process.stdout.write(
+      `${c.bold.green('[OPTIONS]')} ` +
+      `format: "${c.bold.red(config.format)}", ` +
+      `output file: "${c.bold.red(config.file)}", ` +
+      `indentation: "${c.bold.red(String(config.indent))}"\n\n`,
+      );
+    return config;
+  }
+
+  /**
+   * Generates OpenAPI Documentation based on serverless configuration and functions
+   */
+  private generate() {
+    process.stdout.write(c.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
+    // Instantiate DocumentGenerator
     const dg = new DocumentGenerator(this.customVars.documentation);
 
+    // Map function configurations
     const funcConfigs = this.serverless.service.getAllFunctions().map((functionName) => {
       const func = this.serverless.service.getFunction(functionName);
-      return merge([{ _functionName: functionName }, func], { depth: 100 });
+      return merge({ _functionName: functionName }, func);
     });
 
+    // Add Paths to OpenAPI Output from Function Configuration
     dg.addPathsFromFunctionConfig(funcConfigs);
 
+    // Process CLI Input options
+    const config = this.processCliInput();
+
+    // Generate the resulting OpenAPI Object
     const outputObject = dg.generate();
 
+    // Output the OpenAPI document to the correct format
     let outputContent = '';
-    switch (outputFormat.toLowerCase()) {
+    switch (config.format.toLowerCase()) {
       case 'json':
-        if (!outputFile) {
-          outputFile = 'openapi.json';
-        }
-        outputContent = JSON.stringify(outputObject, null, indent);
+        outputContent = JSON.stringify(outputObject, null, config.indent);
         break;
       case 'yaml':
       default:
-        if (!outputFile) {
-          outputFile = 'openapi.yml';
-        }
-        outputContent = YAML.safeDump(outputObject, { indent });
+        outputContent = YAML.safeDump(outputObject, { indent: config.indent });
         break;
     }
 
-    fs.writeFileSync(outputFile, outputContent);
-  }
-
-  private afterDeploy() {
-    console.log('bye');
+    // Write to disk
+    fs.writeFileSync(config.file, outputContent);
+    process.stdout.write(`${ c.bold.green('[SUCCESS]') } Output file to "${c.bold.red(config.file)}"\n`);
   }
 }
 
 module.exports = ServerlessOpenAPIDocumentation;
+;

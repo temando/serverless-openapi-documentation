@@ -18,26 +18,29 @@
   },
   "devDependencies": {
     "@types/node": "^7.0.12",
-    "eslint": "^3.18.0",
-    "eslint-config-airbnb-base": "^11.1.2",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-import": "^2.2.0",
     "jest": "^19.0.2",
     "serverless": "^1.9.0",
-    "ts-jest": "^19.0.6",
+    "ts-jest": "^19.0.8",
     "ts-node": "^3.0.2",
-    "tslint": "^4.5.1",
-    "tslint-eslint-rules": "^3.5.1",
+    "tslint": "^5.1.0",
+    "tslint-eslint-rules": "^4.0.0",
     "typescript": "^2.2.2"
   },
   "dependencies": {
     "@jdw/jst": "^1.0.0-beta.10",
     "@types/bluebird": "^3.5.2",
+    "@types/chalk": "^0.4.31",
     "@types/fs-promise": "^1.0.1",
     "@types/js-yaml": "^3.5.29",
     "bluebird": "^3.5.0",
+    "chalk": "^1.1.3",
     "fs-promise": "^2.0.2",
-    "js-yaml": "^3.8.2",
+    "js-yaml": "^3.8.3",
     "lutils": "^1.2.5",
+    "swagger2openapi": "^2.0.3",
     "uuid": "^3.0.1"
   }
 }

@@ -1,26 +1,18 @@
 import { dereference } from '@jdw/jst';
-import { clone, merge } from 'lutils';
-import uuid from 'uuid';
+import * as c from 'chalk';
+import * as openApiValidator from 'swagger2openapi/validate.js';
 
-type ServiceDescriptionType = {
-  title: string,
-  description: string,
-  version: string,
-  termsOfService?: string,
-  contact?: {
-    name?: string,
-    email?: string,
-    url?: string,
-  },
-  license?: {
-    name: string,
-    url: string,
-  },
-  models?: any[],
-};
+import uuid from 'uuid';
+import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
+import { clone, merge } from './utils';
 
 export default class DocumentGenerator {
+  // The OpenAPI version we currently validate against
+  private openapiVersion = '3.0.0-RC1';
+
+  // Base configuration object
   private config = {
+    openapi: this.openapiVersion,
     description: '',
     version: '0.0.0',
     title: '',
@@ -30,17 +22,56 @@ export default class DocumentGenerator {
     },
   };
 
-  constructor(serviceDescriptor: ServiceDescriptionType) {
-    this.config = this.process(clone(serviceDescriptor, { depth: 100 }));
-    // merge([this.config, serviceDescriptor], { depth: 32 });
-    // console.log(this.config);
+  private serviceDescriptor: IServiceDescription;
+
+  /**
+   * Constructor
+   * @param serviceDescriptor IServiceDescription
+   */
+  constructor(serviceDescriptor: IServiceDescription) {
+    this.serviceDescriptor = clone(serviceDescriptor);
+
+    merge(this.config, {
+      openapi: this.openapiVersion,
+      servers: [],
+      info: {
+        title: serviceDescriptor.summary || '',
+        description: serviceDescriptor.description || '',
+        version: serviceDescriptor.version || uuid.v4(),
+      },
+      paths: {},
+      components: {
+        schemas: {},
+        securitySchemes: {},
+      },
+    });
+
+    for (const model of serviceDescriptor.models) {
+      this.config.components.schemas[model.name] = this.cleanSchema(dereference(model.schema));
+    }
   }
 
   public generate() {
-    return this.config;
+    const result: any = {};
+    process.stdout.write(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
+    try {
+      openApiValidator.validateSync(this.config, result);
+      process.stdout.write(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
+      return this.config;
+    } catch (e) {
+      process.stdout.write(
+        `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n${c.yellow(e.message)}\n\n` +
+        `${c.bold.green('Path:')} ${result.context.pop()}\n`,
+        );
+      throw new Error('Failed to validate OpenAPI document');
+    }
   }
 
-  public addPathsFromFunctionConfig(config) {
+  /**
+   * Add Paths to OpenAPI Configuration from Serverless function documentation
+   * @param config Add
+   */
+  public addPathsFromFunctionConfig(config: IServerlessFunctionConfig[]): void {
     // loop through function configurations
     for (const funcConfig of config) {
       // loop through http events
@@ -48,7 +79,7 @@ export default class DocumentGenerator {
         const httpEventConfig = httpEvent.http;
         if (httpEventConfig.documentation) {
           const documentationConfig = httpEventConfig.documentation;
-          // console.log(documentationConfig);
+          // Build OpenAPI path configuration structure for each method
           const pathConfig = {
             [`/${httpEventConfig.path}`]: {
               [httpEventConfig.method]: {
@@ -61,86 +92,158 @@ export default class DocumentGenerator {
               },
             },
           };
-          merge([this.config.paths, pathConfig], { depth: 100 });
+          // merge path configuration into main configuration
+          merge(this.config.paths, pathConfig);
         }
       }
     }
-    // console.log(JSON.stringify(this.config.paths, null, 2));
+  };
+
+  /**
+   * Cleans schema objects to make them OpenAPI compatible
+   * @param schema JSON Schema Object
+   */
+  private cleanSchema(schema) {
+    // Clone the schema for manipulation
+    const cleanedSchema = clone(schema);
+
+    // Strip $schema from schemas
+    if (cleanedSchema.$schema) {
+      delete cleanedSchema.$schema;
+    }
+
+    // Return the cleaned schema
+    return cleanedSchema;
   }
 
-  private getParametersFromConfig(documentationConfig) {
-    const parameters = [];
-    // Path Parameters
-    if (documentationConfig.pathParams) {
-      for (const parameter of documentationConfig.pathParams) {
-        parameters.push({
-          name: parameter.name,
-          in: 'path',
-          description: parameter.description,
-          required: true, // Note: all path parameters must be required
-          schema: parameter.schema || {},
-          example: parameter.example || null,
-        });
-      }
-    }
-    // Query Parameters
-    if (documentationConfig.queryParams) {
-      for (const parameter of documentationConfig.queryParams) {
-        parameters.push({
-          name: parameter.name,
-          in: 'query',
-          description: parameter.description,
-          required: parameter.required || false, // Note: all path parameters must be required
-          schema: parameter.schema || {},
-          example: parameter.example || null,
-        });
-      }
-    }
+  /**
+   * Derives Path, Query and Request header parameters from Serverless documentation
+   * @param documentationConfig
+   */
+  private getParametersFromConfig(documentationConfig): IParameterConfig[] {
+    const parameters: IParameterConfig[] = [];
 
-    // Request Header Parameters
-    if (documentationConfig.requestHeaders) {
-      for (const parameter of documentationConfig.requestHeaders) {
-        parameters.push({
+    // Build up parameters from configuration for each parameter type
+    for (const type of ['path', 'query', 'header', 'cookie']) {
+      let paramBlock;
+      if (type === 'path' && documentationConfig.pathParams) {
+        paramBlock = documentationConfig.pathParams;
+      } else if (type === 'query' && documentationConfig.queryParams) {
+        paramBlock = documentationConfig.queryParams;
+      } else if (type === 'header' && documentationConfig.requestHeaders) {
+        paramBlock = documentationConfig.requestHeaders;
+      } else if (type === 'cookie' && documentationConfig.cookieParams) {
+        paramBlock = documentationConfig.cookieParams;
+      } else {
+        continue;
+      }
+
+      // Loop through each parameter in a parameter block and add parameters to array
+      for (const parameter of paramBlock) {
+        const parameterConfig: IParameterConfig = {
           name: parameter.name,
-          in: 'header',
-          description: parameter.description,
+          in: type,
+          description: parameter.description || '',
           required: parameter.required || false, // Note: all path parameters must be required
-          schema: parameter.schema || {},
-          example: parameter.example || null,
-        });
+        };
+
+        // if type is path, then required must be true (@see OpenAPI 3.0-RC1)
+        if (type === 'path') {
+          parameterConfig.required = true;
+        } else if (type === 'query') {
+          parameterConfig.allowEmptyValues = parameter.allowEmptyValue || false;  // OpenAPI default is false
+
+          if ('allowReserved' in parameter) {
+            parameterConfig.allowReserved = parameter.allowReserved || false;
+          }
+        }
+
+        if ('deprecated' in parameter) {
+          parameterConfig.deprecated = parameter.deprecated;
+        }
+
+        if ('style' in parameter) {
+          parameterConfig.style = parameter.style;
+          if (parameter.explode) {
+            parameterConfig.explode = parameter.explode;
+          } else {
+            parameterConfig.explode = parameter.explode || (parameter.style === 'form' ? true : false);
+          }
+        }
+
+        // console.log(parameter);
+        if (parameter.schema) {
+          parameterConfig.schema = parameter.schema;
+        }
+
+        if (parameter.example) {
+          parameterConfig.example = parameter.example;
+        } else if (parameter.examples && Array.isArray(parameter.examples)) {
+          parameterConfig.examples = parameter.examples;
+        }
+
+        // Add parameter config to parameters array
+        parameters.push(parameterConfig);
       }
     }
 
     return parameters;
   }
 
+  /**
+   * Derives request body schemas from event documentation configuration
+   * @param documentationConfig
+   */
   private getRequestBodiesFromConfig(documentationConfig) {
     const requestBodies = {};
+
+    // Does this event have a request model?
     if (documentationConfig.requestModels) {
+      // For each request model type (Sorted by "Content-Type")
       for (const requestModelType of Object.keys(documentationConfig.requestModels)) {
-        merge([requestBodies, {
-          [requestModelType]: {
+        // get schema reference information
+        const requestModel = this.serviceDescriptor.models.filter(
+          (model) => model.name === documentationConfig.requestModels[requestModelType],
+        ).pop();
+
+        if (requestModel) {
+          const reqModelConfig = {
             schema: {
               $ref: `#/components/schemas/${documentationConfig.requestModels[requestModelType]}`,
             },
-          },
-         }], { depth: 100 });
+          };
+
+          // Add examples if any can be found
+          if (requestModel.examples && Array.isArray(requestModel.examples)) {
+            merge(reqModelConfig, { examples: clone(requestModel.examples) });
+          } else if (requestModel.example) {
+            merge(reqModelConfig, { example: clone(requestModel.example) });
+          }
+
+          merge(requestBodies, {
+            [requestModelType]: reqModelConfig,
+          });
+        }
       }
     }
 
     return requestBodies;
   }
 
+  /**
+   * Gets response bodies from documentation config
+   * @param documentationConfig
+   */
   private getResponsesFromConfig(documentationConfig) {
     const responses = {};
     if (documentationConfig.methodResponses) {
       for (const response of documentationConfig.methodResponses) {
-        merge([responses, {
+        merge(responses, {
           [response.statusCode]: {
             description: response.description || `Status ${response.statusCode} Response`,
             content: this.getResponseContent(response.responseModels),
           },
-         }], { depth: 100 });
+         });
       }
     }
 
@@ -150,11 +253,22 @@ export default class DocumentGenerator {
   private getResponseContent(response) {
     const content = {};
     for (const responseKey of Object.keys(response)) {
-      merge(content, { [responseKey] : {
-        schema: {
-          $ref: `#/components/schemas/${response[responseKey]}`,
-        },
-      } });
+      const responseModel = this.serviceDescriptor.models.filter(
+          (model) => model.name === response[responseKey],
+        ).pop();
+      if (responseModel) {
+        const resModelConfig = {
+          schema: {
+            $ref: `#/components/schemas/${response[responseKey]}`,
+          },
+        };
+        if (responseModel.examples && Array.isArray(responseModel.examples)) {
+          merge(resModelConfig, { examples: clone(responseModel.examples) });
+        } else if (responseModel.example) {
+          merge(resModelConfig, { example: clone(responseModel.example) });
+        }
+        merge(content, { [responseKey] : resModelConfig });
+      }
     }
     // console.log(content);
     return content;
@@ -162,32 +276,5 @@ export default class DocumentGenerator {
 
   private getHttpEvents(funcConfig) {
     return funcConfig.filter((event) => event.http ? true : false);
-  }
-
-  private process(serviceDescriptor): any {
-    const configObject = {
-      openapi: '3.0.0-RC0',
-      servers: [],
-      info: {
-        title: serviceDescriptor.summary || '',
-        description: serviceDescriptor.description || '',
-        version: serviceDescriptor.version || uuid.v4(),
-      },
-      paths: {},
-      components: {
-        schemas: {},
-        requestBodies: {},
-        responses: {},
-        parameters: {},
-        examples: {},
-        securitySchemes: {},
-      },
-    };
-
-    for (const model of serviceDescriptor.models) {
-      configObject.components.schemas[model.name] = dereference(model.schema);
-    }
-
-    return configObject;
   }
 }
