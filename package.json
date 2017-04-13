@@ -27,12 +27,12 @@
     "ts-node": "^3.0.2",
     "tslint": "^5.1.0",
     "tslint-eslint-rules": "^4.0.0",
+    "typedoc": "^0.5.10",
     "typescript": "^2.2.2"
   },
   "dependencies": {
     "@jdw/jst": "^1.0.0-beta.10",
     "@types/bluebird": "^3.5.2",
-    "@types/chalk": "^0.4.31",
     "@types/fs-promise": "^1.0.1",
     "@types/js-yaml": "^3.5.29",
     "bluebird": "^3.5.0",

@@ -97,7 +97,7 @@ export default class DocumentGenerator {
         }
       }
     }
-  };
+  }
 
   /**
    * Cleans schema objects to make them OpenAPI compatible
@@ -173,7 +173,7 @@ export default class DocumentGenerator {
 
         // console.log(parameter);
         if (parameter.schema) {
-          parameterConfig.schema = parameter.schema;
+          parameterConfig.schema = this.cleanSchema(parameter.schema);
         }
 
         if (parameter.example) {
@@ -220,9 +220,17 @@ export default class DocumentGenerator {
             merge(reqModelConfig, { example: clone(requestModel.example) });
           }
 
-          merge(requestBodies, {
-            [requestModelType]: reqModelConfig,
-          });
+          const reqBodyConfig: { content: object, description?: string } = {
+            content: {
+              [requestModelType]: reqModelConfig,
+            },
+          };
+
+          if (documentationConfig.requestBody && 'description' in documentationConfig.requestBody) {
+            reqBodyConfig.description = documentationConfig.requestBody.description;
+          }
+
+          merge(requestBodies, reqBodyConfig);
         }
       }
     }
@@ -238,11 +246,29 @@ export default class DocumentGenerator {
     const responses = {};
     if (documentationConfig.methodResponses) {
       for (const response of documentationConfig.methodResponses) {
+        const methodResponseConfig: { description: any, content: object, headers?: object } = {
+          description: (
+            (response.responseBody && 'description' in response.responseBody)
+              ? response.responseBody.description
+              : `Status ${response.statusCode} Response`
+          ),
+          content: this.getResponseContent(response.responseModels),
+        };
+
+        if (response.responseHeaders) {
+          methodResponseConfig.headers = {};
+          for (const header of response.responseHeaders) {
+            methodResponseConfig.headers[header.name] = {
+              description: header.description || `${header.name} header`,
+            };
+            if (header.schema) {
+              methodResponseConfig.headers[header.name].schema = this.cleanSchema(header.schema);
+            }
+          }
+        }
+
         merge(responses, {
-          [response.statusCode]: {
-            description: response.description || `Status ${response.statusCode} Response`,
-            content: this.getResponseContent(response.responseModels),
-          },
+          [response.statusCode]: methodResponseConfig,
          });
       }
     }
