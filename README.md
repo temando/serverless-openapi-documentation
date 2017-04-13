@@ -124,16 +124,16 @@ The `documentation` section of the event configuration can contain the following
 * `description`: a detailed description of the method
 * `requestBody`: contains description of the request
     * `description`: a description of the request body
-* `requestModels`: a list of models to describe the request bodies (see [requestModels](#requestModels) below)
-* `queryParams`: a list of query parameters (see [queryParams](#queryParams) below)
-* `pathParams`: a list of path parameters (see [pathParams](#pathParams) below)
-* `cookieParams`: a list of cookie parameters (see [cookieParams](#cookieParams) below)
+* `requestModels`: a list of models to describe the request bodies (see [requestModels](#requestmodels) below)
+* `queryParams`: a list of query parameters (see [queryParams](#queryparams) below)
+* `pathParams`: a list of path parameters (see [pathParams](#pathparams) below)
+* `cookieParams`: a list of cookie parameters (see [cookieParams](#cookieparams) below)
 * `methodResponses`: an array of response models and applicable status codes
   * `statusCode`: applicable http status code (ie. 200/404/500 etc.)
   * `responseBody`: contains description of the response
     * `description`: a description of the body response
-  * `responseHeaders`: a list of response headers (see [responseHeaders](#responseHeaders) below)
-  * `responseModels`: a list of models to describe the request bodies (see [responseModels](#responseModels) below) for each `Content-Type`
+  * `responseHeaders`: a list of response headers (see [responseHeaders](#responseheaders) below)
+  * `responseModels`: a list of models to describe the request bodies (see [responseModels](#responsemodels) below) for each `Content-Type`
 
 ```yml
 functions:
@@ -236,7 +236,7 @@ cookieParams:
 
 #### requestModels
 
-The `requestModels` property allows you to define models for the HTTP Request of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant request model named in the `models` section of your configuration (see [Defining Models](#definingmodels) section).
+The `requestModels` property allows you to define models for the HTTP Request of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant request model named in the `models` section of your configuration (see [Defining Models](#defining-models) section).
 
 ```yml
 requestModels:
@@ -265,7 +265,7 @@ methodResponse:
 
 ##### responseModels
 
-The `responseModels` property allows you to define models for the HTTP Response of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant response model named in the `models` section of your configuration (see [Defining Models](#definingmodels) section).
+The `responseModels` property allows you to define models for the HTTP Response of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant response model named in the `models` section of your configuration (see [Defining Models](#defining-models) section).
 
 ```yml
 responseModels:
