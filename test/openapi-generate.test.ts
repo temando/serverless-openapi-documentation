@@ -5,14 +5,15 @@ import DocumentGenerator from '../src/generate';
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
+  public config: any = {};
+  public yamlParser: any = {};
+  public pluginManager: any = {};
+  public variables: any = {};
 }
 
 describe('OpenAPI Documentation Generator', () => {
   it('Generates OpenAPI document', async () => {
     const serverlessConfig = await fs.readFile('test/fixtures/serverless.yml');
-    // console.log(serverlessConfig.toString());
-    // const fuck = yaml.safeLoad(serverlessConfig.toString());
-    // console.log(JSON.stringify(fuck, null, 2));
     const sls: ServerlessInterface = new Serverless();
     sls.config.update({
       servicePath: path.join(process.cwd(), 'test/fixtures'),
