@@ -134,4 +134,4 @@ export default class ServerlessOpenAPIDocumentation {
 }
 
 module.exports = ServerlessOpenAPIDocumentation;
-;
+

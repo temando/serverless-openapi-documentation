@@ -71,6 +71,3 @@ custom:
               properties:
                 SomeAttribute:
                   type: string
-
-plugins:
-  - serverless-openapi-documentation

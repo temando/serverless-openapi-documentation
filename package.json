@@ -9,20 +9,23 @@
     "dist"
   ],
   "scripts": {
-    "test": "jest --config ./.jestrc",
+    "test": "yarn test:unit",
+    "test:unit": "jest -i --config .jestrc",
     "lint": "eslint src",
-    "test:watch": "yarn test -- -i --watch",
+    "test:watch": "jest --config .jestrc -i -t '/[^/.]+\\.test' --watch",
     "release:npm": "cd dist && npm publish",
     "docs": "typedoc --out ./dist/docs --target es6 --readme README.md",
     "build": "node scripts/package"
   },
   "devDependencies": {
+    "@types/jest": "^19.2.2",
     "@types/node": "^7.0.12",
+    "@types/typescript": "^2.0.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.1.3",
     "eslint-plugin-import": "^2.2.0",
     "jest": "^19.0.2",
-    "serverless": "^1.9.0",
+    "serverless": "^1.11.0",
     "ts-jest": "^19.0.8",
     "ts-node": "^3.0.2",
     "tslint": "^5.1.0",
@@ -33,8 +36,10 @@
   "dependencies": {
     "@jdw/jst": "^1.0.0-beta.10",
     "@types/bluebird": "^3.5.2",
-    "@types/fs-promise": "^1.0.1",
+    "@types/chalk": "^0.4.31",
+    "@types/fs-promise": "^1.0.3",
     "@types/js-yaml": "^3.5.29",
+    "@types/uuid": "^2.0.29",
     "bluebird": "^3.5.0",
     "chalk": "^1.1.3",
     "fs-promise": "^2.0.2",

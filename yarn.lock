@@ -24,9 +24,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/fs-promise@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@types/fs-promise/-/fs-promise-1.0.1.tgz#a77e18c055d7757d44a34c1ed7e8bb505992f783"
+"@types/fs-promise@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@types/fs-promise/-/fs-promise-1.0.3.tgz#1ee71e7a1edd3503a905cdec26240f485dcdcbaf"
   dependencies:
     "@types/mz" "*"
     "@types/node" "*"
@@ -38,6 +38,10 @@
 "@types/highlight.js@^9.1.8":
   version "9.1.9"
   resolved "https://registry.yarnpkg.com/@types/highlight.js/-/highlight.js-9.1.9.tgz#ed6336955eaf233b75eb7923b9b1f373d045ef01"
+
+"@types/jest@^19.2.2":
+  version "19.2.2"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-19.2.2.tgz#71f428be2fa6eb9f15bb0abc3cade67905f94839"
 
 "@types/js-yaml@^3.5.29":
   version "3.5.29"
@@ -68,6 +72,18 @@
 "@types/shelljs@^0.3.32":
   version "0.3.33"
   resolved "https://registry.yarnpkg.com/@types/shelljs/-/shelljs-0.3.33.tgz#df613bddb88225ed09ce5c835f620dcaaf155e6b"
+  dependencies:
+    "@types/node" "*"
+
+"@types/typescript@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@types/typescript/-/typescript-2.0.0.tgz#c433539c98bae28682b307eaa7a0fd2115b83c28"
+  dependencies:
+    typescript "*"
+
+"@types/uuid@^2.0.29":
+  version "2.0.29"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-2.0.29.tgz#939a198ab73567f811ab84f670d2be9c25addd41"
   dependencies:
     "@types/node" "*"
 
@@ -3089,6 +3105,10 @@ resolve-from@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-1.0.1.tgz#26cbfe935d1aeeeabb29bc3fe5aeb01e93d44226"
 
+resolve-from@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-2.0.0.tgz#9480ab20e94ffa1d9e80a804c7ea147611966b57"
+
 resolve@1.1.7, resolve@1.1.x:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
@@ -3170,9 +3190,9 @@ semver@~5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.0.3.tgz#77466de589cd5d3c95f138aa78bc569a3cb5d27a"
 
-serverless@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/serverless/-/serverless-1.9.0.tgz#5c73d67e228fcb5140a731a3248616b1db17d75e"
+serverless@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/serverless/-/serverless-1.11.0.tgz#bb87e11b334ded5249a93b6827704daa885d280c"
   dependencies:
     archiver "^1.1.0"
     async "^1.5.2"
@@ -3192,6 +3212,7 @@ serverless@^1.9.0:
     moment "^2.13.0"
     node-fetch "^1.5.3"
     replaceall "^0.1.6"
+    resolve-from "^2.0.0"
     semver "^5.0.3"
     semver-regex "^1.0.0"
     shelljs "^0.6.0"
@@ -3684,7 +3705,7 @@ typedoc@^0.5.10:
     typedoc-default-themes "^0.4.2"
     typescript "2.2.2"
 
-typescript@2.2.2, typescript@^2.2.2:
+typescript@*, typescript@2.2.2, typescript@^2.2.2:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.2.2.tgz#606022508479b55ffa368b58fee963a03dfd7b0c"
 

@@ -2,7 +2,7 @@ import { dereference } from '@jdw/jst';
 import * as c from 'chalk';
 import * as openApiValidator from 'swagger2openapi/validate.js';
 
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
 import { clone, merge } from './utils';
 
