@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
 import { clone, merge } from './utils';
 
-export default class DocumentGenerator {
+export class DocumentGenerator {
   // The OpenAPI version we currently validate against
   private openapiVersion = '3.0.0-RC1';
 
@@ -28,7 +28,7 @@ export default class DocumentGenerator {
    * Constructor
    * @param serviceDescriptor IServiceDescription
    */
-  constructor(serviceDescriptor: IServiceDescription) {
+  constructor (serviceDescriptor: IServiceDescription) {
     this.serviceDescriptor = clone(serviceDescriptor);
 
     merge(this.config, {
@@ -51,7 +51,7 @@ export default class DocumentGenerator {
     }
   }
 
-  public generate() {
+  public generate () {
     const result: any = {};
     process.stdout.write(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
     try {
@@ -71,7 +71,7 @@ export default class DocumentGenerator {
    * Add Paths to OpenAPI Configuration from Serverless function documentation
    * @param config Add
    */
-  public addPathsFromFunctionConfig(config: IServerlessFunctionConfig[]): void {
+  public addPathsFromFunctionConfig (config: IServerlessFunctionConfig[]): void {
     // loop through function configurations
     for (const funcConfig of config) {
       // loop through http events
@@ -103,7 +103,7 @@ export default class DocumentGenerator {
    * Cleans schema objects to make them OpenAPI compatible
    * @param schema JSON Schema Object
    */
-  private cleanSchema(schema) {
+  private cleanSchema (schema) {
     // Clone the schema for manipulation
     const cleanedSchema = clone(schema);
 
@@ -120,7 +120,7 @@ export default class DocumentGenerator {
    * Derives Path, Query and Request header parameters from Serverless documentation
    * @param documentationConfig
    */
-  private getParametersFromConfig(documentationConfig): IParameterConfig[] {
+  private getParametersFromConfig (documentationConfig): IParameterConfig[] {
     const parameters: IParameterConfig[] = [];
 
     // Build up parameters from configuration for each parameter type
@@ -164,11 +164,10 @@ export default class DocumentGenerator {
 
         if ('style' in parameter) {
           parameterConfig.style = parameter.style;
-          if (parameter.explode) {
-            parameterConfig.explode = parameter.explode;
-          } else {
-            parameterConfig.explode = parameter.explode || (parameter.style === 'form' ? true : false);
-          }
+
+          parameterConfig.explode = parameter.explode
+            ? parameter.explode
+            : parameter.style === 'form';
         }
 
         // console.log(parameter);
@@ -194,7 +193,7 @@ export default class DocumentGenerator {
    * Derives request body schemas from event documentation configuration
    * @param documentationConfig
    */
-  private getRequestBodiesFromConfig(documentationConfig) {
+  private getRequestBodiesFromConfig (documentationConfig) {
     const requestBodies = {};
 
     // Does this event have a request model?
@@ -242,7 +241,7 @@ export default class DocumentGenerator {
    * Gets response bodies from documentation config
    * @param documentationConfig
    */
-  private getResponsesFromConfig(documentationConfig) {
+  private getResponsesFromConfig (documentationConfig) {
     const responses = {};
     if (documentationConfig.methodResponses) {
       for (const response of documentationConfig.methodResponses) {
@@ -269,14 +268,14 @@ export default class DocumentGenerator {
 
         merge(responses, {
           [response.statusCode]: methodResponseConfig,
-         });
+        });
       }
     }
 
     return responses;
   }
 
-  private getResponseContent(response) {
+  private getResponseContent (response) {
     const content = {};
     for (const responseKey of Object.keys(response)) {
       const responseModel = this.serviceDescriptor.models.filter(
@@ -300,7 +299,7 @@ export default class DocumentGenerator {
     return content;
   }
 
-  private getHttpEvents(funcConfig) {
+  private getHttpEvents (funcConfig) {
     return funcConfig.filter((event) => event.http ? true : false);
   }
 }

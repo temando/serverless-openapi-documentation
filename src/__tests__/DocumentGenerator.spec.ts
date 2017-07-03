@@ -1,7 +1,6 @@
-import * as fs from 'fs-promise';
 import * as path from 'path';
 import * as Serverless from 'serverless';
-import DocumentGenerator from '../src/generate';
+import { DocumentGenerator } from '../DocumentGenerator';
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -13,18 +12,24 @@ class ServerlessInterface extends Serverless {
 
 describe('OpenAPI Documentation Generator', () => {
   it('Generates OpenAPI document', async () => {
-    const serverlessConfig = await fs.readFile('test/fixtures/serverless.yml');
+    const servicePath = path.join(__dirname, './fixtures');
+    const serverlessYamlPath = path.join(servicePath, './serverless.yml');
     const sls: ServerlessInterface = new Serverless();
+
     sls.config.update({
-      servicePath: path.join(process.cwd(), 'test/fixtures'),
+      servicePath,
     });
-    const config = await sls.yamlParser.parse(path.join(process.cwd(), 'test/fixtures/serverless.yml'));
+
+    const config = await sls.yamlParser.parse(serverlessYamlPath);
     sls.pluginManager.cliOptions = { stage: 'dev' };
+
     await sls.service.load(config);
-    sls.variables.populateService({});
+    await sls.variables.populateService();
 
     if ('documentation' in sls.service.custom) {
       const docGen = new DocumentGenerator(sls.service.custom.documentation);
+
+      expect(docGen).not.toBeNull();
     } else {
       throw new Error('Cannot find "documentation" in custom section of "serverless.yml"');
     }
