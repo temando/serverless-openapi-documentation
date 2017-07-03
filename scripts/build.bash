@@ -12,7 +12,3 @@ rsync -am  ./src/* ./dist --exclude '*.ts'
 
 # Build typescript
 yarn tsc
-
-
-
-
