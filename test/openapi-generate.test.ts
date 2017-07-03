@@ -15,13 +15,16 @@ describe('OpenAPI Documentation Generator', () => {
   it('Generates OpenAPI document', async () => {
     const serverlessConfig = await fs.readFile('test/fixtures/serverless.yml');
     const sls: ServerlessInterface = new Serverless();
+
     sls.config.update({
       servicePath: path.join(process.cwd(), 'test/fixtures'),
     });
+
     const config = await sls.yamlParser.parse(path.join(process.cwd(), 'test/fixtures/serverless.yml'));
     sls.pluginManager.cliOptions = { stage: 'dev' };
+
     await sls.service.load(config);
-    sls.variables.populateService({});
+    await sls.variables.populateService();
 
     if ('documentation' in sls.service.custom) {
       const docGen = new DocumentGenerator(sls.service.custom.documentation);
