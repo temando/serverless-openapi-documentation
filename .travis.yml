@@ -10,4 +10,3 @@ script:
   - yarn lint
   - yarn build
   - yarn test
-  - yarn test:bench
