@@ -20,7 +20,7 @@ export default class ServerlessOpenAPIDocumentation {
    * @param serverless
    * @param options
    */
-  constructor(serverless, options) {
+  constructor (serverless, options) {
     // pull the serverless instance into our class vars
     this.serverless = serverless;
     // pull the CLI options into our class vars
@@ -66,7 +66,7 @@ export default class ServerlessOpenAPIDocumentation {
    * Processes CLI input by reading the input from serverless
    * @returns config IConfigType
    */
-  private processCliInput(): IConfigType {
+  private processCliInput (): IConfigType {
     const config: IConfigType = {
       format: 'yaml',
       file: 'openapi.yml',
@@ -95,7 +95,7 @@ export default class ServerlessOpenAPIDocumentation {
   /**
    * Generates OpenAPI Documentation based on serverless configuration and functions
    */
-  private generate() {
+  private generate () {
     process.stdout.write(c.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
     // Instantiate DocumentGenerator
     const dg = new DocumentGenerator(this.customVars.documentation);
@@ -118,13 +118,13 @@ export default class ServerlessOpenAPIDocumentation {
     // Output the OpenAPI document to the correct format
     let outputContent = '';
     switch (config.format.toLowerCase()) {
-      case 'json':
-        outputContent = JSON.stringify(outputObject, null, config.indent);
-        break;
-      case 'yaml':
-      default:
-        outputContent = YAML.safeDump(outputObject, { indent: config.indent });
-        break;
+    case 'json':
+      outputContent = JSON.stringify(outputObject, null, config.indent);
+      break;
+    case 'yaml':
+    default:
+      outputContent = YAML.safeDump(outputObject, { indent: config.indent });
+      break;
     }
 
     // Write to disk
@@ -134,4 +134,3 @@ export default class ServerlessOpenAPIDocumentation {
 }
 
 module.exports = ServerlessOpenAPIDocumentation;
-

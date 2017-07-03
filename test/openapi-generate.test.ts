@@ -1,4 +1,4 @@
-import * as fs from 'fs-promise';
+import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as Serverless from 'serverless';
 import DocumentGenerator from '../src/generate';
