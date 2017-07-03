@@ -1,7 +1,7 @@
 node_modules
 /npm-*
 /dist
-
+.coverage
 .directory
 .DS_STORE*
 *.log

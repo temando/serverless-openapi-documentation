@@ -1,7 +1,8 @@
 language: node_js
+node_js: ["6"]
 
-node_js:
-  - "6"
+before_install:
+  - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
 
 install:
   - yarn install
@@ -9,4 +10,11 @@ install:
 script:
   - yarn lint
   - yarn build
-  - yarn test
+  - DEBUG=true yarn test:coverage
+
+deploy:
+  provider: script
+  script:
+    - npm run release
+  on:
+    tags: true

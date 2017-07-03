@@ -13,10 +13,9 @@
     "dist"
   ],
   "scripts": {
-    "test": "yarn test:unit",
-    "test:unit": "jest",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "lint": "tslint 'src/**/*.ts'",
-    "test:watch": "jest -t '/[^/.]+\\.test' --watch",
     "release": "cd dist && npm publish",
     "build": "scripts/build.bash"
   },
