@@ -6,7 +6,7 @@ import * as uuid from 'uuid';
 import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
 import { clone, merge } from './utils';
 
-export default class DocumentGenerator {
+export class DocumentGenerator {
   // The OpenAPI version we currently validate against
   private openapiVersion = '3.0.0-RC1';
 

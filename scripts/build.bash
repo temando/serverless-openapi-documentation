@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Clean
-rm -rf dist
-mkdir dist
+rm -rf build
+mkdir build
 
 # Copy latent, belonging to the index module
-rsync -am . ./dist  --exclude '*/*' --include '*' 
+rsync -am . ./build  --exclude '*/*' --include '*' 
 
 # Copy latent files from source, recursively
-rsync -am  ./src/* ./dist --exclude '*.ts'
+rsync -am  ./src/* ./build --exclude '*.ts'
 
 # Build typescript
 yarn tsc

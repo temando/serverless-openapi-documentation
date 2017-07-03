@@ -10,6 +10,7 @@ install:
 script:
   - yarn lint
   - yarn build
+  - yarn test:build
   - DEBUG=true yarn test:coverage
 
 deploy:

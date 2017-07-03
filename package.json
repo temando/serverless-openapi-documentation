@@ -2,21 +2,19 @@
   "name": "serverless-openapi-documentation",
   "version": "0.0.0",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
-  "main": "dist/index.js",
+  "main": "index.js",
   "author": "Abilio Henrique <abilio.henrique@temando.com>",
   "contributors": [
     "Abilio Henrique <abilio.henrique@temando.com>",
     "nfour <novus.nfour@gmail.com>"
   ],
   "license": "MIT",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "test": "jest",
+    "test:build": "jest -c '{}' build",
     "test:coverage": "jest --coverage",
     "lint": "tslint 'src/**/*.ts'",
-    "release": "cd dist && npm publish",
+    "release": "cd build && npm publish",
     "build": "scripts/build.bash"
   },
   "devDependencies": {
