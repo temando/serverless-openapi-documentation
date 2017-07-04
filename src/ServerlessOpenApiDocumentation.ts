@@ -132,6 +132,7 @@ export class ServerlessOpenApiDocumentation {
 
       for (const info of validation.error) {
         this.log(c.grey('\n\n--------\n\n'));
+        this.log(' ', c.blue(info.dataPath), '\n');
         this.log(' ', info.schemaPath, c.bold.yellow(info.message));
         this.log(c.grey('\n\n--------\n\n'));
         this.log(`${inspect(info, { colors: true, depth: 2 })}\n\n`);

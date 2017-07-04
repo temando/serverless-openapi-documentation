@@ -195,6 +195,10 @@ export class DefinitionGenerator {
   private getRequestBodiesFromConfig (documentationConfig) {
     const requestBodies = {};
 
+    if (!documentationConfig.requestModels) {
+      throw new Error(`Required requestModels in: ${JSON.stringify(documentationConfig, null, 2)}`);
+    }
+
     // Does this event have a request model?
     if (documentationConfig.requestModels) {
       // For each request model type (Sorted by "Content-Type")
@@ -211,7 +215,7 @@ export class DefinitionGenerator {
             },
           };
 
-          this.applyExamples(requestModel, reqModelConfig);
+          this.attachExamples(requestModel, reqModelConfig);
 
           const reqBodyConfig: { content: object, description?: string } = {
             content: {
@@ -231,7 +235,7 @@ export class DefinitionGenerator {
     return requestBodies;
   }
 
-  private applyExamples (target, config) {
+  private attachExamples (target, config) {
     if (target.examples && Array.isArray(target.examples)) {
       merge(config, { examples: clone(target.examples) });
     } else if (target.example) {
@@ -292,7 +296,7 @@ export class DefinitionGenerator {
           },
         };
 
-        this.applyExamples(responseModel, resModelConfig);
+        this.attachExamples(responseModel, resModelConfig);
 
         merge(content, { [responseKey] : resModelConfig });
       }
