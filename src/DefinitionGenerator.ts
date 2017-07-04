@@ -67,10 +67,14 @@ export class DefinitionGenerator {
     return this;
   }
 
-  public validate (): { valid: boolean, context: string[], warnings: any[] } {
+  public validate (): { valid: boolean, context: string[], warnings: any[], error?: any[] } {
     const payload: any = {};
 
-    openApiValidator.validateSync(this.definition, payload);
+    try {
+      openApiValidator.validateSync(this.definition, payload);
+    } catch (error) {
+      payload.error = JSON.parse(error.message.replace(/^Failed OpenAPI3 schema validation: /, ''));
+    }
 
     return payload;
   }
@@ -301,7 +305,7 @@ export class DefinitionGenerator {
         merge(content, { [responseKey] : resModelConfig });
       }
     }
-    // console.log(content);
+
     return content;
   }
 

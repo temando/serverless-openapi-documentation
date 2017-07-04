@@ -1,6 +1,7 @@
 import * as c from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
+import { inspect } from 'util';
 import { DefinitionGenerator } from './DefinitionGenerator';
 import { IDefinitionType, ILog } from './types';
 import { merge } from './utils';
@@ -129,10 +130,15 @@ export class ServerlessOpenApiDocumentation {
     if (validation.valid) {
       this.log(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
     } else {
-      this.log(
-        `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n` +
-        `${c.bold.green('Path:')} ${JSON.stringify(validation, null, 2)}\n`,
-      );
+      this.log(`${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n`);
+      this.log(`${c.bold.green('Path:')} ${JSON.stringify(validation.context, null, 2)}\n`);
+
+      for (const info of validation.error) {
+        this.log(c.grey('\n\n--------\n\n'));
+        this.log(' ', info.schemaPath, c.bold.yellow(info.message));
+        this.log(c.grey('\n\n--------\n\n'));
+        this.log(`${inspect(info, { colors: true, depth: 2 })}\n\n`);
+      }
     }
 
     const { definition } = generator;
@@ -152,6 +158,6 @@ export class ServerlessOpenApiDocumentation {
 
     fs.writeFileSync(config.file, output);
 
-    this.log(`${ c.bold.green('[SUCCESS]') } Output file to "${c.bold.red(config.file)}"\n`);
+    this.log(`${ c.bold.green('[OUTPUT]') } To "${c.bold.red(config.file)}"\n`);
   }
 }
