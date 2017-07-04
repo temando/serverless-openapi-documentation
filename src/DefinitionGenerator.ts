@@ -76,6 +76,7 @@ export class DefinitionGenerator {
       // loop through http events
       for (const httpEvent of this.getHttpEvents(funcConfig.events)) {
         const httpEventConfig = httpEvent.http;
+
         if (httpEventConfig.documentation) {
           const documentationConfig = httpEventConfig.documentation;
           // Build OpenAPI path configuration structure for each method
@@ -91,6 +92,7 @@ export class DefinitionGenerator {
               },
             },
           };
+
           // merge path configuration into main configuration
           merge(this.definition.paths, pathConfig);
         }
