@@ -8,15 +8,15 @@ export interface IModels {
   example: object;
 }
 
-export interface IServiceDescription {
-  version?: string;
-  summary: string;
+export interface IDefinitionConfig {
+  title: string;
   description: string;
+  version?: string;
   models: IModels[];
 }
 
-export interface IConfigType {
-  file: string; // Foo blah
+export interface IDefinitionType {
+  file: string;
   format: 'yaml' | 'json';
   indent: number;
 }

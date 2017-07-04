@@ -1,8 +1,8 @@
 import * as c from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
-import { DocumentGenerator } from './DocumentGenerator';
-import { IConfigType, ILog } from './types';
+import { DefinitionGenerator } from './DefinitionGenerator';
+import { IDefinitionType, ILog } from './types';
 import { merge } from './utils';
 
 export class ServerlessOpenApiDocumentation {
@@ -70,8 +70,8 @@ export class ServerlessOpenApiDocumentation {
    * Processes CLI input by reading the input from serverless
    * @returns config IConfigType
    */
-  private processCliInput (): IConfigType {
-    const config: IConfigType = {
+  private processCliInput (): IDefinitionType {
+    const config: IDefinitionType = {
       format: 'yaml',
       file: 'openapi.yml',
       indent: 2,
@@ -103,10 +103,12 @@ export class ServerlessOpenApiDocumentation {
   private generate () {
     this.log(c.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
     // Instantiate DocumentGenerator
-    const generator = new DocumentGenerator({
-      serviceDescriptor: this.customVars.documentation,
+    const generator = new DefinitionGenerator({
+      config: this.customVars.documentation,
       log: this.log,
     });
+
+    generator.parse();
 
     // Map function configurations
     const funcConfigs = this.serverless.service.getAllFunctions().map((functionName) => {
@@ -115,28 +117,41 @@ export class ServerlessOpenApiDocumentation {
     });
 
     // Add Paths to OpenAPI Output from Function Configuration
-    generator.addPathsFromFunctionConfig(funcConfigs);
+    generator.readFunctions(funcConfigs);
 
     // Process CLI Input options
     const config = this.processCliInput();
 
-    // Generate the resulting OpenAPI Object
-    const outputObject = generator.generate();
+    this.log(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
+
+    const validation = generator.validate();
+
+    if (validation.valid) {
+      this.log(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
+    } else {
+      this.log(
+        `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n` +
+        `${c.bold.green('Path:')} ${JSON.stringify(validation, null, 2)}\n`,
+      );
+    }
+
+    const { definition } = generator;
 
     // Output the OpenAPI document to the correct format
-    let outputContent = '';
+
+    let output;
     switch (config.format.toLowerCase()) {
     case 'json':
-      outputContent = JSON.stringify(outputObject, null, config.indent);
+      output = JSON.stringify(definition, null, config.indent);
       break;
     case 'yaml':
     default:
-      outputContent = YAML.safeDump(outputObject, { indent: config.indent });
+      output = YAML.safeDump(definition, { indent: config.indent });
       break;
     }
 
-    // Write to disk
-    fs.writeFileSync(config.file, outputContent);
+    fs.writeFileSync(config.file, output);
+
     this.log(`${ c.bold.green('[SUCCESS]') } Output file to "${c.bold.red(config.file)}"\n`);
   }
 }

@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as Serverless from 'serverless';
-import { DocumentGenerator } from '../DocumentGenerator';
+import { DefinitionGenerator } from '../DefinitionGenerator';
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -27,7 +27,7 @@ describe('OpenAPI Documentation Generator', () => {
     await sls.variables.populateService();
 
     if ('documentation' in sls.service.custom) {
-      const docGen = new DocumentGenerator(sls.service.custom.documentation);
+      const docGen = new DefinitionGenerator(sls.service.custom.documentation);
 
       expect(docGen).not.toBeNull();
     } else {
