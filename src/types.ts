@@ -43,3 +43,5 @@ export interface IParameterConfig {
   example?: any;
   examples?: [any];
 }
+
+export type ILog = (...str: string[]) => void;

@@ -2,7 +2,7 @@ import * as c from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
 import { DocumentGenerator } from './DocumentGenerator';
-import { IConfigType } from './types';
+import { IConfigType, ILog } from './types';
 import { merge } from './utils';
 
 export class ServerlessOpenApiDocumentation {
@@ -62,6 +62,10 @@ export class ServerlessOpenApiDocumentation {
     };
   }
 
+  log: ILog = (...str: string[]) => {
+    process.stdout.write(str.join(' '));
+  }
+
   /**
    * Processes CLI input by reading the input from serverless
    * @returns config IConfigType
@@ -83,12 +87,13 @@ export class ServerlessOpenApiDocumentation {
     config.file = this.serverless.processedInput.options.output ||
       ((config.format === 'yaml') ? 'openapi.yml' : 'openapi.json');
 
-    process.stdout.write(
-      `${c.bold.green('[OPTIONS]')} ` +
-      `format: "${c.bold.red(config.format)}", ` +
-      `output file: "${c.bold.red(config.file)}", ` +
+    this.log(
+      `${c.bold.green('[OPTIONS]')}`,
+      `format: "${c.bold.red(config.format)}",`,
+      `output file: "${c.bold.red(config.file)}",`,
       `indentation: "${c.bold.red(String(config.indent))}"\n\n`,
-      );
+    );
+
     return config;
   }
 
@@ -96,9 +101,12 @@ export class ServerlessOpenApiDocumentation {
    * Generates OpenAPI Documentation based on serverless configuration and functions
    */
   private generate () {
-    process.stdout.write(c.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
+    this.log(c.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
     // Instantiate DocumentGenerator
-    const dg = new DocumentGenerator(this.customVars.documentation);
+    const generator = new DocumentGenerator({
+      serviceDescriptor: this.customVars.documentation,
+      log: this.log,
+    });
 
     // Map function configurations
     const funcConfigs = this.serverless.service.getAllFunctions().map((functionName) => {
@@ -107,13 +115,13 @@ export class ServerlessOpenApiDocumentation {
     });
 
     // Add Paths to OpenAPI Output from Function Configuration
-    dg.addPathsFromFunctionConfig(funcConfigs);
+    generator.addPathsFromFunctionConfig(funcConfigs);
 
     // Process CLI Input options
     const config = this.processCliInput();
 
     // Generate the resulting OpenAPI Object
-    const outputObject = dg.generate();
+    const outputObject = generator.generate();
 
     // Output the OpenAPI document to the correct format
     let outputContent = '';
@@ -129,6 +137,6 @@ export class ServerlessOpenApiDocumentation {
 
     // Write to disk
     fs.writeFileSync(config.file, outputContent);
-    process.stdout.write(`${ c.bold.green('[SUCCESS]') } Output file to "${c.bold.red(config.file)}"\n`);
+    this.log(`${ c.bold.green('[SUCCESS]') } Output file to "${c.bold.red(config.file)}"\n`);
   }
 }

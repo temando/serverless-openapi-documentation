@@ -3,7 +3,7 @@ import * as c from 'chalk';
 import * as openApiValidator from 'swagger2openapi/validate';
 
 import * as uuid from 'uuid';
-import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
+import { ILog, IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
 import { clone, merge } from './utils';
 
 export class DocumentGenerator {
@@ -23,13 +23,18 @@ export class DocumentGenerator {
   };
 
   private serviceDescriptor: IServiceDescription;
+  private log: ILog;
 
   /**
    * Constructor
    * @param serviceDescriptor IServiceDescription
    */
-  constructor (serviceDescriptor: IServiceDescription) {
+  constructor ({ log, serviceDescriptor }: {
+    log: ILog,
+    serviceDescriptor: IServiceDescription,
+  }) {
     this.serviceDescriptor = clone(serviceDescriptor);
+    this.log = log;
 
     merge(this.config, {
       openapi: this.openapiVersion,
@@ -53,17 +58,21 @@ export class DocumentGenerator {
 
   public generate () {
     const result: any = {};
-    process.stdout.write(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
+    this.log(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
+
     try {
       openApiValidator.validateSync(this.config, result);
-      process.stdout.write(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
+
+      this.log(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
+
       return this.config;
     } catch (e) {
-      process.stdout.write(
+      this.log(
         `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n${c.yellow(e.message)}\n\n` +
-        `${c.bold.green('Path:')} ${result.valid} ${result.context}\n`,
-        );
-      // throw new Error('Failed to validate OpenAPI document');
+        `${c.bold.green('Path:')} ${JSON.stringify(result, null, 2)}\n`,
+      );
+
+      throw new Error('Failed to validate OpenAPI document');
     }
   }
 
