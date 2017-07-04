@@ -4,6 +4,9 @@ provider:
   name: aws
   runtime: nodejs6.10
 
+plugins:
+  - serverless-openapi-documentation
+
 functions:
   createUser:
     handler: handler.create

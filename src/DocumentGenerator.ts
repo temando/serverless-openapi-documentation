@@ -1,6 +1,6 @@
 import { dereference } from '@jdw/jst';
 import * as c from 'chalk';
-import * as openApiValidator from 'swagger2openapi/validate.js';
+import * as openApiValidator from 'swagger2openapi/validate';
 
 import * as uuid from 'uuid';
 import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
@@ -61,9 +61,9 @@ export class DocumentGenerator {
     } catch (e) {
       process.stdout.write(
         `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n${c.yellow(e.message)}\n\n` +
-        `${c.bold.green('Path:')} ${result.context.pop()}\n`,
+        `${c.bold.green('Path:')} ${result.valid} ${result.context}\n`,
         );
-      throw new Error('Failed to validate OpenAPI document');
+      // throw new Error('Failed to validate OpenAPI document');
     }
   }
 

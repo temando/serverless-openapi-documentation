@@ -12,7 +12,7 @@ class ServerlessInterface extends Serverless {
 
 describe('OpenAPI Documentation Generator', () => {
   it('Generates OpenAPI document', async () => {
-    const servicePath = path.join(__dirname, './fixtures');
+    const servicePath = path.join(__dirname, '../../test/project');
     const serverlessYamlPath = path.join(servicePath, './serverless.yml');
     const sls: ServerlessInterface = new Serverless();
 

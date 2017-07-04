@@ -16,6 +16,7 @@
     "lint": "tslint 'src/**/*.ts'",
     "release": "cd build && npm publish",
     "build:link": "yarn build && cd build && yarn link",
+    "build:watch": "yarn build && tsc --watch",
     "build": "scripts/build.bash"
   },
   "devDependencies": {
