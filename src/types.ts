@@ -36,7 +36,7 @@ export interface IParameterConfig {
   required?: boolean;
   schema?: object;
   deprecated?: boolean;
-  allowEmptyValues?: boolean;
+  allowEmptyValue?: boolean;
   style?: 'form' | 'simple';
   explode?: boolean;
   allowReserved?: boolean;

@@ -150,7 +150,7 @@ export class DefinitionGenerator {
         if (type === 'path') {
           parameterConfig.required = true;
         } else if (type === 'query') {
-          parameterConfig.allowEmptyValues = parameter.allowEmptyValue || false;  // OpenAPI default is false
+          parameterConfig.allowEmptyValue = parameter.allowEmptyValue || false;  // OpenAPI default is false
 
           if ('allowReserved' in parameter) {
             parameterConfig.allowReserved = parameter.allowReserved || false;
