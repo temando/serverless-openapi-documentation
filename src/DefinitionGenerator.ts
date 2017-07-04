@@ -1,9 +1,8 @@
 import { dereference } from '@jdw/jst';
-import * as c from 'chalk';
 import * as openApiValidator from 'swagger2openapi/validate';
 
 import * as uuid from 'uuid';
-import { IDefinitionConfig, ILog, IParameterConfig, IServerlessFunctionConfig } from './types';
+import { IDefinition, IDefinitionConfig, IParameterConfig, IServerlessFunctionConfig } from './types';
 import { clone, merge } from './utils';
 
 export class DefinitionGenerator {
@@ -11,30 +10,19 @@ export class DefinitionGenerator {
   public version = '3.0.0-RC1';
 
   // Base configuration object
-  public definition = {
+  public definition = <IDefinition> {
     openapi: this.version,
-    description: '',
-    version: '0.0.0',
-    title: '',
-    paths: {},
-    components: {
-      schemas: {},
-    },
+    components: {},
   };
 
-  private config: IDefinitionConfig;
-  private log: ILog;
+  public config: IDefinitionConfig;
 
   /**
    * Constructor
    * @param serviceDescriptor IServiceDescription
    */
-  constructor ({ log, config }: {
-    log: ILog,
-    config: IDefinitionConfig,
-  }) {
+  constructor (config: IDefinitionConfig) {
     this.config = clone(config);
-    this.log = log;
   }
 
   public parse () {
@@ -47,7 +35,6 @@ export class DefinitionGenerator {
 
     merge(this.definition, {
       openapi: this.version,
-      servers: [],
       info: { title, description, version },
       paths: {},
       components: {

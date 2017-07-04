@@ -44,4 +44,12 @@ export interface IParameterConfig {
   examples?: [any];
 }
 
+// FIXME:
+export interface IDefinition {
+  openapi: string;
+  components: any;
+  info: any;
+  paths: any;
+}
+
 export type ILog = (...str: string[]) => void;
