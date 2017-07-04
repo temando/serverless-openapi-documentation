@@ -1,6 +1,6 @@
 import * as path from 'path';
 import * as Serverless from 'serverless';
-import { DocumentGenerator } from '../DocumentGenerator';
+import { DefinitionGenerator } from '../DefinitionGenerator';
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -12,7 +12,7 @@ class ServerlessInterface extends Serverless {
 
 describe('OpenAPI Documentation Generator', () => {
   it('Generates OpenAPI document', async () => {
-    const servicePath = path.join(__dirname, './fixtures');
+    const servicePath = path.join(__dirname, '../../test/project');
     const serverlessYamlPath = path.join(servicePath, './serverless.yml');
     const sls: ServerlessInterface = new Serverless();
 
@@ -27,7 +27,7 @@ describe('OpenAPI Documentation Generator', () => {
     await sls.variables.populateService();
 
     if ('documentation' in sls.service.custom) {
-      const docGen = new DocumentGenerator(sls.service.custom.documentation);
+      const docGen = new DefinitionGenerator(sls.service.custom.documentation);
 
       expect(docGen).not.toBeNull();
     } else {

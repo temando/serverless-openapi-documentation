@@ -1,0 +1,78 @@
+service: serverless-openapi-doc-demo
+frameworkVersion: ">=1.1.0 < 2.0.0"
+provider:
+  name: aws
+  runtime: nodejs6.10
+
+plugins:
+  - serverless-openapi-documentation
+
+functions:
+  createUser:
+    handler: handler.create
+    events:
+      - http: 
+          path: create
+          method: post
+          documentation:
+            summary: Create User
+            description: Creates a user and then sends a generated password email
+            requestBody:
+              description: A user information object
+            requestModels:
+              application/json: PutDocumentRequest
+            pathParams:
+              - name: username
+                description: The username for a user to create
+                schema:
+                  type: string
+                  pattern: "^[-a-z0-9_]+$"
+            queryParams:
+              - name: membershipType
+                description: The user's Membership Type
+                schema:
+                  type: string
+                  enum:
+                    - premium
+                    - standard
+            cookieParams:
+              - name: SessionId
+                description: A Session ID variable
+                schema: 
+                  type: string
+            methodResponses:
+              - statusCode: 201
+                responseBody:
+                  description: A user object along with generated API Keys
+                responseModels:
+                  application/json: PutDocumentResponse
+              - statusCode: 500
+                responseBody:
+                  description: An error message when creating a new user
+                responseModels:
+                  application/json: ErrorResponse
+
+custom:
+  documentation:
+    models:
+      - name: ErrorResponse
+        description: This is an error
+        contentType: application/json
+        schema: ${file(models/ErrorResponse.json)}
+
+      - name: PutDocumentResponse
+        description: PUT Document response model (external reference example)
+        contentType: application/json
+        schema: ${file(models/PutDocumentResponse.json)}
+
+      - name: PutDocumentRequest
+        description: PUT Document request model (inline example)
+        contentType: application/json
+        schema:
+          $schema: http://json-schema.org/draft-04/schema#
+          properties:
+            SomeObject:
+              type: object
+              properties:
+                SomeAttribute:
+                  type: string

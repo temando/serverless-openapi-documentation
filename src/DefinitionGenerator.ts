@@ -1,44 +1,41 @@
 import { dereference } from '@jdw/jst';
-import * as c from 'chalk';
-import * as openApiValidator from 'swagger2openapi/validate.js';
+import * as openApiValidator from 'swagger2openapi/validate';
 
 import * as uuid from 'uuid';
-import { IParameterConfig, IServerlessFunctionConfig, IServiceDescription } from './types';
+import { IDefinition, IDefinitionConfig, IParameterConfig, IServerlessFunctionConfig } from './types';
 import { clone, merge } from './utils';
 
-export class DocumentGenerator {
+export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
-  private openapiVersion = '3.0.0-RC1';
+  public version = '3.0.0-RC1';
 
   // Base configuration object
-  private config = {
-    openapi: this.openapiVersion,
-    description: '',
-    version: '0.0.0',
-    title: '',
-    paths: {},
-    components: {
-      schemas: {},
-    },
+  public definition = <IDefinition> {
+    openapi: this.version,
+    components: {},
   };
 
-  private serviceDescriptor: IServiceDescription;
+  public config: IDefinitionConfig;
 
   /**
    * Constructor
    * @param serviceDescriptor IServiceDescription
    */
-  constructor (serviceDescriptor: IServiceDescription) {
-    this.serviceDescriptor = clone(serviceDescriptor);
+  constructor (config: IDefinitionConfig) {
+    this.config = clone(config);
+  }
 
-    merge(this.config, {
-      openapi: this.openapiVersion,
-      servers: [],
-      info: {
-        title: serviceDescriptor.summary || '',
-        description: serviceDescriptor.description || '',
-        version: serviceDescriptor.version || uuid.v4(),
-      },
+  public parse () {
+    const {
+      title = '',
+      description = '',
+      version = uuid.v4(),
+      models,
+    } = this.config;
+
+    merge(this.definition, {
+      openapi: this.version,
+      info: { title, description, version },
       paths: {},
       components: {
         schemas: {},
@@ -46,32 +43,34 @@ export class DocumentGenerator {
       },
     });
 
-    for (const model of serviceDescriptor.models) {
-      this.config.components.schemas[model.name] = this.cleanSchema(dereference(model.schema));
+    if (models) {
+      for (const model of models) {
+        this.definition.components.schemas[model.name] = this.cleanSchema(
+          dereference(model.schema),
+        );
+      }
     }
+
+    return this;
   }
 
-  public generate () {
-    const result: any = {};
-    process.stdout.write(`${ c.bold.yellow('[VALIDATION]') } Validating OpenAPI generated output\n`);
+  public validate (): { valid: boolean, context: string[], warnings: any[], error?: any[] } {
+    const payload: any = {};
+
     try {
-      openApiValidator.validateSync(this.config, result);
-      process.stdout.write(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
-      return this.config;
-    } catch (e) {
-      process.stdout.write(
-        `${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n${c.yellow(e.message)}\n\n` +
-        `${c.bold.green('Path:')} ${result.context.pop()}\n`,
-        );
-      throw new Error('Failed to validate OpenAPI document');
+      openApiValidator.validateSync(this.definition, payload);
+    } catch (error) {
+      payload.error = JSON.parse(error.message.replace(/^Failed OpenAPI3 schema validation: /, ''));
     }
+
+    return payload;
   }
 
   /**
    * Add Paths to OpenAPI Configuration from Serverless function documentation
    * @param config Add
    */
-  public addPathsFromFunctionConfig (config: IServerlessFunctionConfig[]): void {
+  public readFunctions (config: IServerlessFunctionConfig[]): void {
     // loop through function configurations
     for (const funcConfig of config) {
       // loop through http events
@@ -93,7 +92,7 @@ export class DocumentGenerator {
             },
           };
           // merge path configuration into main configuration
-          merge(this.config.paths, pathConfig);
+          merge(this.definition.paths, pathConfig);
         }
       }
     }
@@ -170,7 +169,6 @@ export class DocumentGenerator {
             : parameter.style === 'form';
         }
 
-        // console.log(parameter);
         if (parameter.schema) {
           parameterConfig.schema = this.cleanSchema(parameter.schema);
         }
@@ -181,7 +179,6 @@ export class DocumentGenerator {
           parameterConfig.examples = parameter.examples;
         }
 
-        // Add parameter config to parameters array
         parameters.push(parameterConfig);
       }
     }
@@ -201,7 +198,7 @@ export class DocumentGenerator {
       // For each request model type (Sorted by "Content-Type")
       for (const requestModelType of Object.keys(documentationConfig.requestModels)) {
         // get schema reference information
-        const requestModel = this.serviceDescriptor.models.filter(
+        const requestModel = this.config.models.filter(
           (model) => model.name === documentationConfig.requestModels[requestModelType],
         ).pop();
 
@@ -278,7 +275,7 @@ export class DocumentGenerator {
   private getResponseContent (response) {
     const content = {};
     for (const responseKey of Object.keys(response)) {
-      const responseModel = this.serviceDescriptor.models.filter(
+      const responseModel = this.config.models.filter(
           (model) => model.name === response[responseKey],
         ).pop();
       if (responseModel) {
@@ -295,7 +292,7 @@ export class DocumentGenerator {
         merge(content, { [responseKey] : resModelConfig });
       }
     }
-    // console.log(content);
+
     return content;
   }
 
