@@ -15,6 +15,8 @@
     "test:coverage": "jest --coverage",
     "lint": "tslint 'src/**/*.ts'",
     "release": "cd build && npm publish",
+    "test:project": "cd test/project && yarn sls openapi generate",
+    "test:prepare": "scripts/prepareTests.bash",
     "build:link": "yarn build && cd build && yarn link",
     "build:watch": "yarn build && tsc --watch",
     "build": "scripts/build.bash"
