@@ -164,7 +164,7 @@ components:
 info:
   title: ''
   description: ''
-  version: 6468e32d-3e32-4d98-9e62-ef0bc4e106ef
+  version: 442d95b9-dcc5-4e6e-a354-a561b8904c08
 paths:
   /create:
     post:

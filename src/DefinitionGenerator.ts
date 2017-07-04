@@ -209,12 +209,7 @@ export class DefinitionGenerator {
             },
           };
 
-          // Add examples if any can be found
-          if (requestModel.examples && Array.isArray(requestModel.examples)) {
-            merge(reqModelConfig, { examples: clone(requestModel.examples) });
-          } else if (requestModel.example) {
-            merge(reqModelConfig, { example: clone(requestModel.example) });
-          }
+          this.applyExamples(requestModel, reqModelConfig);
 
           const reqBodyConfig: { content: object, description?: string } = {
             content: {
@@ -232,6 +227,14 @@ export class DefinitionGenerator {
     }
 
     return requestBodies;
+  }
+
+  private applyExamples (target, config) {
+    if (target.examples && Array.isArray(target.examples)) {
+      merge(config, { examples: clone(target.examples) });
+    } else if (target.example) {
+      merge(config, { example: clone(target.example) });
+    }
   }
 
   /**
@@ -274,21 +277,21 @@ export class DefinitionGenerator {
 
   private getResponseContent (response) {
     const content = {};
+
     for (const responseKey of Object.keys(response)) {
-      const responseModel = this.config.models.filter(
-          (model) => model.name === response[responseKey],
-        ).pop();
+      const responseModel = this.config.models.find((model) =>
+        model.name === response[responseKey],
+      );
+
       if (responseModel) {
         const resModelConfig = {
           schema: {
             $ref: `#/components/schemas/${response[responseKey]}`,
           },
         };
-        if (responseModel.examples && Array.isArray(responseModel.examples)) {
-          merge(resModelConfig, { examples: clone(responseModel.examples) });
-        } else if (responseModel.example) {
-          merge(resModelConfig, { example: clone(responseModel.example) });
-        }
+
+        this.applyExamples(responseModel, resModelConfig);
+
         merge(content, { [responseKey] : resModelConfig });
       }
     }
