@@ -1,38 +1,28 @@
+
+[![Travis CI](https://img.shields.io/travis/temando/serverless-openapi-documentation.svg)](https://travis-ci.org/temando/serverless-openapi-documentation)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
+
 # Serverless OpenAPI v3 Documentation Plugin
 
-This plugin generates OpenAPI v3 documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is extends the format specified by [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
+Generates [**OpenAPI 3.0 RC2**](https://github.com/OAI/OpenAPI-Specification/tree/OpenAPI.next) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
+---
 
-## Install
+- [Usage](#usage)
+  - [Options](#options)
+  - [Configuration](#configuration)
+    - [Models](#models)
+    - [Functions](#functions)
+    - [`queryParams`](#queryparams)
+    - [`pathParams`](#pathparams)
+    - [`cookieParams`](#cookieparams)
+    - [`requestModels`](#requestmodels)
+    - [`methodResponses`](#methodresponses)
+- [Example Configuration](#example-configuration)
+- [Install](#install)
 
-This plugin works for Serverless 1.x and up. Serverless 0.5 is not supported.
-
-To add this plugin to your package.json:
-
-**Using npm:**
-```bash
-npm install serverless-openapi-documentation --save-dev
-```
-
-**Using Yarn:**
-```bash
-yarn add serverless-openapi-documentation --dev
-```
-
-Next you need to add the plugin to the `plugins` section of your `serverless.yml` file.
-
-```yml
-plugins:
-  - serverless-openapi-documentation
-```
-
-You can confirm the plugin is correctly installed by running:
-
-```bash
-serverless | grep "ServerlessOpenAPIDocumentation"
-```
-
-It should return `ServerlessOpenAPIDocumentation` as one of the plugins on the list.
+---
 
 ## Usage
 
@@ -43,7 +33,9 @@ Below are the commandline options to run the generator:
 ```bash
 serverless openapi generate [options]
 ```
+
 ### Options
+
 ```bash
 Plugin: ServerlessOpenAPIDocumentation
 openapi generate  ...................... Generate OpenAPI v3 Documentation
@@ -57,7 +49,7 @@ openapi generate  ...................... Generate OpenAPI v3 Documentation
 
 To configure this plugin to generate valid OpenAPI documentation there are two places you'll need to modify in your `serverless.yml` file, the `custom` variables section and the `http` event section for each given function in your service.
 
-This plugin is compatible with the same documentation configuration as per [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation) and can run beside it.
+This plugin is compatible with the same documentation configuration structure in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation) and can run beside it.
 
 The `custom` section of your `serverless.yml` can be configured as below:
 
@@ -67,18 +59,23 @@ custom:
     version: '1'
     summary: 'My API'
     description: 'This is my API'
+    models: {}
 ```
 
-If you find this configuration too verbose, you can separate it out into it's own file, such as `serverless.doc.yml` by replacing it with the following:
+These configurations can be quite verbose; you can separate it out into it's own file, such as `serverless.doc.yml` as below:
 
 ```yml
 custom:
   documentation: ${file(serverless.doc.yml):documentation}
+
+functions:
+  myFunc:
+    documentation: ${file(serverless.doc.yml):endpoints.myFunc}
 ```
 
-And instead putting the `documentation` section directly into `serverless.doc.yml`.
+For more info on `serverless.yml` syntax, see their docs.
 
-#### Defining models
+#### Models
 
 Models contain additional information that you can use to define schemas for endpoints.  You must define the *content type* for each schema that you provide in the models.
 
@@ -114,7 +111,7 @@ custom:
                   type: "string"
 ```
 
-### Function event specific documentation
+#### Functions
 
 To define the documentation for a given function event, you need to create a `documentation` attribute for your http event in your `serverless.yml` file.
 
@@ -295,8 +292,37 @@ responseHeaders:
 
 Please view the example [serverless.yml](test/serverless.yml).
 
-## Contribution
-`Insert: information on contibution here`
+## Install
+
+This plugin works for Serverless 1.x and up. Serverless 0.5 is not supported.
+
+To add this plugin to your package.json:
+
+**Using npm:**
+```bash
+npm install serverless-openapi-documentation --save-dev
+```
+
+**Using Yarn:**
+```bash
+yarn add serverless-openapi-documentation --dev
+```
+
+Next you need to add the plugin to the `plugins` section of your `serverless.yml` file.
+
+```yml
+plugins:
+  - serverless-openapi-documentation
+```
+
+You can confirm the plugin is correctly installed by running:
+
+```bash
+serverless | grep "ServerlessOpenAPIDocumentation"
+```
+
+It should return `ServerlessOpenAPIDocumentation` as one of the plugins on the list.
+
 
 ## License
 
