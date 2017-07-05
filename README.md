@@ -70,7 +70,11 @@ custom:
 
 functions:
   myFunc:
-    documentation: ${file(serverless.doc.yml):endpoints.myFunc}
+    events:
+      - http:
+          path: getStuff
+          method: get
+          documentation: ${file(serverless.doc.yml):endpoints.myFunc}
 ```
 
 For more info on `serverless.yml` syntax, see their docs.
@@ -179,7 +183,7 @@ functions:
                 application/json: "ErrorResponse"
 ```
 
-#### queryParams
+#### `queryParams`
 
 Query parameters can be described as follow:
 
@@ -197,7 +201,7 @@ queryParams:
       type: "string"
 ```
 
-#### pathParams
+#### `pathParams`
 
 Path parameters can be described as follow:
 
@@ -213,7 +217,7 @@ pathParams:
       type: "string"
 ```
 
-#### cookieParams
+#### `cookieParams`
 
 Cookie parameters can be described as follow:
 
@@ -231,7 +235,7 @@ cookieParams:
       type: "string"
 ```
 
-#### requestModels
+#### `requestModels`
 
 The `requestModels` property allows you to define models for the HTTP Request of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant request model named in the `models` section of your configuration (see [Defining Models](#defining-models) section).
 
@@ -241,7 +245,7 @@ requestModels:
   application/xml: "CreateRequestXML"
 ```
 
-#### methodResponses
+#### `methodResponses`
 
 You can define the response schemas by defining properties for your function event.
 
@@ -260,7 +264,7 @@ methodResponse:
       application/xml: "CreateResponseXML"
 ```
 
-##### responseModels
+##### `responseModels`
 
 The `responseModels` property allows you to define models for the HTTP Response of the function event. You can define a different model for each different `Content-Type`. You can define a reference to the relevant response model named in the `models` section of your configuration (see [Defining Models](#defining-models) section).
 
@@ -270,7 +274,7 @@ responseModels:
   application/xml: "CreateResponseXML"
 ```
 
-##### responseHeaders
+##### `responseHeaders`
 
 The `responseHeaders` section of the configuration allows you to define the HTTP response headers for the function event.
 
