@@ -3,7 +3,7 @@
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 
-# Serverless OpenAPI v3 Documentation Plugin
+# Serverless OpenAPI Documentation Plugin
 
 Generates [**OpenAPI 3.0 RC2**](https://github.com/OAI/OpenAPI-Specification/tree/OpenAPI.next) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
