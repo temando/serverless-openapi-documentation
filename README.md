@@ -7,6 +7,8 @@
 
 Generates [**OpenAPI 3.0 RC2**](https://github.com/OAI/OpenAPI-Specification/tree/OpenAPI.next) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
+Works well on [Lincoln Open Api Renderer](https://github.com/temando/open-api-renderer)
+
 ---
 
 - [Usage](#usage)
