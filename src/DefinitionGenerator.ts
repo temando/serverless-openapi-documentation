@@ -7,7 +7,7 @@ import { clone, merge } from './utils';
 
 export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
-  public version = '3.0.0-RC1';
+  public version = '3.0.0-RC2';
 
   // Base configuration object
   public definition = <IDefinition> {
