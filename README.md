@@ -296,7 +296,7 @@ responseHeaders:
 
 ## Example configuration
 
-Please view the example [serverless.yml](test/serverless.yml).
+Please view the example [serverless.yml](test/project/serverless.yml).
 
 ## Install
 
