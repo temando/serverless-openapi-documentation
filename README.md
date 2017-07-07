@@ -276,9 +276,9 @@ responseModels:
   application/xml: "CreateResponseXML"
 ```
 
-##### `responseHeaders`
+##### `responseHeaders` and `requestHeaders`
 
-The `responseHeaders` section of the configuration allows you to define the HTTP response headers for the function event.
+The `responseHeaders/requestHeaders` section of the configuration allows you to define the HTTP response headers for the function event.
 
 The attributes for a response header are as follow:
 
@@ -288,6 +288,11 @@ The attributes for a response header are as follow:
 
 ```yml
 responseHeaders:
+  - name: "Content-Type"
+    description: "Content Type header"
+    schema:
+      type: "string"
+requestHeaders:
   - name: "Content-Type"
     description: "Content Type header"
     schema:
