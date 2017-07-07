@@ -12,8 +12,6 @@ script:
 
 deploy:
   provider: script
-  script:
-    - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-    - npm run release
+  script: scripts/travisDeploy.bash
   on:
     tags: true
