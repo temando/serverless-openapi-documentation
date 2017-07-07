@@ -23,7 +23,7 @@
     "test": "jest",
     "test:build": "jest -c '{}' build",
     "test:coverage": "jest --coverage",
-    "lint": "tslint 'src/**/*.ts'",
+    "lint": "tslint -p tsconfig.json --type-check -c tslint.json",
     "preversion": "npm run lint && npm run test",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && yarn sls openapi generate",
