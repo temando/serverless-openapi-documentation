@@ -11,7 +11,9 @@ script:
   - DEBUG=true yarn test:coverage
 
 deploy:
-  provider: script
-  script: scripts/travisDeploy.bash
-  on:
-    tags: true
+  - provider: script
+    script: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
+    on: { tags: true }
+  - provider: script
+    script: npm run release
+    on: { tags: true }
