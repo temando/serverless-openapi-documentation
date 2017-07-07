@@ -278,9 +278,9 @@ responseModels:
 
 ##### `responseHeaders` and `requestHeaders`
 
-The `responseHeaders/requestHeaders` section of the configuration allows you to define the HTTP response headers for the function event.
+The `responseHeaders/requestHeaders` section of the configuration allows you to define the HTTP headers for the function event.
 
-The attributes for a response header are as follow:
+The attributes for a header are as follow:
 
 * `name`: the name of the HTTP Header
 * `description`: a description of the HTTP Header
