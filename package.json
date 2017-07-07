@@ -3,10 +3,20 @@
   "version": "0.2.0",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/temando/serverless-openapi-documentation.git"
+  },
+  "bugs": "https://github.com/temando/serverless-openapi-documentation/issues",
   "author": "Abilio Henrique <abilio.henrique@temando.com>",
   "contributors": [
     "Abilio Henrique <abilio.henrique@temando.com>",
     "nfour <novus.nfour@gmail.com>"
+  ],
+  "keywords":[
+    "OpenAPI",
+    "swagger",
+    "serverless"
   ],
   "license": "MIT",
   "scripts": {
@@ -14,6 +24,7 @@
     "test:build": "jest -c '{}' build",
     "test:coverage": "jest --coverage",
     "lint": "tslint 'src/**/*.ts'",
+    "preversion": "npm run lint && npm run test",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && yarn sls openapi generate",
     "test:prepare": "scripts/prepareTests.bash",

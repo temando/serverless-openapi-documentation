@@ -1,13 +1,12 @@
+# Serverless OpenAPI Documentation Plugin
 
+[![NPM](https://img.shields.io/npm/v/serverless-openapi-documentation.svg)](https://npmjs.org/packages/serverless-openapi-documentation/)
 [![Travis CI](https://img.shields.io/travis/temando/serverless-openapi-documentation.svg)](https://travis-ci.org/temando/serverless-openapi-documentation)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-
-# Serverless OpenAPI Documentation Plugin
-
 Generates [**OpenAPI 3.0 RC2**](https://github.com/OAI/OpenAPI-Specification/tree/OpenAPI.next) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
-Works well on [Lincoln Open Api Renderer](https://github.com/temando/open-api-renderer)
+Works well with [Lincoln Open Api Renderer](https://github.com/temando/open-api-renderer).
 
 ---
 
@@ -170,7 +169,7 @@ functions:
           cookieParams:
             - name: "SessionId"
               description: "A Session ID variable"
-              schema: 
+              schema:
                 type: "string"
           methodResponses:
             - statusCode: 201
@@ -261,7 +260,7 @@ methodResponse:
         description: "Content Type header"
         schema:
           type: "string"
-    responseModels: 
+    responseModels:
       application/json: "CreateResponse"
       application/xml: "CreateResponseXML"
 ```
@@ -333,7 +332,6 @@ serverless | grep "ServerlessOpenAPIDocumentation"
 ```
 
 It should return `ServerlessOpenAPIDocumentation` as one of the plugins on the list.
-
 
 ## License
 
