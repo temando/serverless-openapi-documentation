@@ -12,8 +12,6 @@ script:
 
 deploy:
   - provider: script
-    script: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc
-    on: { tags: true }
-  - provider: script
-    script: npm run release
-    on: { tags: true }
+    script: echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > .npmrc && npm run release
+    on:
+      tags: true
