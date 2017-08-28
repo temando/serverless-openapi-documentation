@@ -13,10 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Operation now supports `deprecated` and `tags` properties.
 - Parameters now support the `content` property.
 - Updated various build dependencies.
+- OpenAPI definition will now be smaller in most cases, choosing to omit optional properties instead of using empty defaults.
 
 ## Fixed
 
 - Handle when `models` is not iterable.
+- Handle when `models` have no `schema`.
+- Always lowercase the HTTP method to conform to OpenAPI spec.
 
 ## [v0.2.1] - 2017-07-07
 

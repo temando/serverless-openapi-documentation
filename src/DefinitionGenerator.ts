@@ -45,6 +45,10 @@ export class DefinitionGenerator {
 
     if (isIterable(models)) {
       for (const model of models) {
+        if (!model.schema) {
+          continue;
+        }
+
         this.definition.components.schemas[model.name] = this.cleanSchema(
           dereference(model.schema),
         );
@@ -81,7 +85,7 @@ export class DefinitionGenerator {
           // Build OpenAPI path configuration structure for each method
           const pathConfig = {
             [`/${httpEventConfig.path}`]: {
-              [httpEventConfig.method]: this.getOperationFromConfig(
+              [httpEventConfig.method.toLowerCase()]: this.getOperationFromConfig(
                 funcConfig._functionName,
                 httpEventConfig.documentation,
               ),
@@ -120,16 +124,31 @@ export class DefinitionGenerator {
    * @param documentationConfig
    */
   private getOperationFromConfig (funcName: string, documentationConfig): IOperation {
-    return {
+    const operationObj: IOperation = {
       operationId: funcName,
-      tags: documentationConfig.tags || [],
-      deprecated: documentationConfig.deprecated || false,
-      summary: documentationConfig.summary || '',
-      description: documentationConfig.description || '',
-      parameters: this.getParametersFromConfig(documentationConfig),
-      requestBody: this.getRequestBodiesFromConfig(documentationConfig),
-      responses: this.getResponsesFromConfig(documentationConfig),
     };
+
+    if (documentationConfig.summary) {
+      operationObj.summary = documentationConfig.summary;
+    }
+
+    if (documentationConfig.description) {
+      operationObj.description = documentationConfig.description;
+    }
+
+    if (documentationConfig.tags) {
+      operationObj.tags = documentationConfig.tags;
+    }
+
+    if (documentationConfig.deprecated) {
+      operationObj.deprecated = true;
+    }
+
+    operationObj.parameters = this.getParametersFromConfig(documentationConfig);
+    operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
+    operationObj.responses = this.getResponsesFromConfig(documentationConfig);
+
+    return operationObj;
   }
 
   /**
