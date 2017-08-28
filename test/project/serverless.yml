@@ -11,7 +11,7 @@ functions:
   createUser:
     handler: handler.create
     events:
-      - http: 
+      - http:
           path: create
           method: post
           documentation:
@@ -38,7 +38,7 @@ functions:
             cookieParams:
               - name: SessionId
                 description: A Session ID variable
-                schema: 
+                schema:
                   type: string
             methodResponses:
               - statusCode: 201
