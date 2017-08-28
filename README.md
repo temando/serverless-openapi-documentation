@@ -73,9 +73,9 @@ functions:
   myFunc:
     events:
       - http:
-        path: getStuff
-        method: get
-        documentation: ${file(serverless.doc.yml):endpoints.myFunc}
+          path: getStuff
+          method: get
+          documentation: ${file(serverless.doc.yml):endpoints.myFunc}
 ```
 
 For more info on `serverless.yml` syntax, see their docs.
