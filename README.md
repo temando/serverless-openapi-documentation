@@ -124,6 +124,8 @@ The `documentation` section of the event configuration can contain the following
 
 * `summary`: a short description of the method
 * `description`: a detailed description of the method
+* `tags`: an array of tags for this event
+* `deprecated`: boolean indicator that indicates clients should migrate away from this function
 * `requestBody`: contains description of the request
     * `description`: a description of the request body
 * `requestModels`: a list of models to describe the request bodies (see [requestModels](#requestmodels) below)
