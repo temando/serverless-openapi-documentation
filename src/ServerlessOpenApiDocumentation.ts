@@ -48,7 +48,7 @@ export class ServerlessOpenApiDocumentation {
                 shortcut: 'f',
               },
               indent: {
-                usage: 'File indentation in spaces[default: 2]',
+                usage: 'File indentation in spaces [default: 2]',
                 shortcut: 'i',
               },
             },
@@ -128,14 +128,18 @@ export class ServerlessOpenApiDocumentation {
       this.log(`${ c.bold.green('[VALIDATION]') } OpenAPI valid: ${c.bold.green('true')}\n\n`);
     } else {
       this.log(`${c.bold.red('[VALIDATION]')} Failed to validate OpenAPI document: \n\n`);
-      this.log(`${c.bold.green('Path:')} ${JSON.stringify(validation.context, null, 2)}\n`);
+      this.log(`${c.bold.green('Context:')} ${JSON.stringify(validation.context, null, 2)}\n`);
 
-      for (const info of validation.error) {
-        this.log(c.grey('\n\n--------\n\n'));
-        this.log(' ', c.blue(info.dataPath), '\n');
-        this.log(' ', info.schemaPath, c.bold.yellow(info.message));
-        this.log(c.grey('\n\n--------\n\n'));
-        this.log(`${inspect(info, { colors: true, depth: 2 })}\n\n`);
+      if (typeof validation.error === 'string') {
+        this.log(`${validation.error}\n\n`);
+      } else {
+        for (const info of validation.error) {
+          this.log(c.grey('\n\n--------\n\n'));
+          this.log(' ', c.blue(info.dataPath), '\n');
+          this.log(' ', info.schemaPath, c.bold.yellow(info.message));
+          this.log(c.grey('\n\n--------\n\n'));
+          this.log(`${inspect(info, { colors: true, depth: 2 })}\n\n`);
+        }
       }
     }
 

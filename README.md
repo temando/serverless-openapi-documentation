@@ -4,9 +4,9 @@
 [![Travis CI](https://img.shields.io/travis/temando/serverless-openapi-documentation.svg)](https://travis-ci.org/temando/serverless-openapi-documentation)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-Generates [**OpenAPI 3.0 RC2**](https://github.com/OAI/OpenAPI-Specification/tree/OpenAPI.next) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
+Generates [**OpenAPI 3.0.0**](https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
-Works well with [Lincoln Open Api Renderer](https://github.com/temando/open-api-renderer).
+Works well with [Lincoln OpenAPI Renderer](https://github.com/temando/open-api-renderer).
 
 ---
 
@@ -42,7 +42,7 @@ Plugin: ServerlessOpenAPIDocumentation
 openapi generate  ...................... Generate OpenAPI v3 Documentation
     --output / -o ...................... Output file location [default: openapi.yml|json]
     --format / -f ...................... OpenAPI file format (yml|json) [default: yml]
-    --indent / -i ...................... File indentation in spaces[default: 2]
+    --indent / -i ...................... File indentation in spaces [default: 2]
     --help / -h   ...................... Help
 ```
 
@@ -58,7 +58,7 @@ The `custom` section of your `serverless.yml` can be configured as below:
 custom:
   documentation:
     version: '1'
-    summary: 'My API'
+    title: 'My API'
     description: 'This is my API'
     models: {}
 ```
@@ -73,9 +73,9 @@ functions:
   myFunc:
     events:
       - http:
-          path: getStuff
-          method: get
-          documentation: ${file(serverless.doc.yml):endpoints.myFunc}
+        path: getStuff
+        method: get
+        documentation: ${file(serverless.doc.yml):endpoints.myFunc}
 ```
 
 For more info on `serverless.yml` syntax, see their docs.
@@ -332,6 +332,8 @@ serverless | grep "ServerlessOpenAPIDocumentation"
 ```
 
 It should return `ServerlessOpenAPIDocumentation` as one of the plugins on the list.
+
+> Note: Add this plugin _after_ `serverless-offline` to prevent issues with `String.replaceAll` being overridden incorrectly.
 
 ## License
 

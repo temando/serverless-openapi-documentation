@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir":"./build",
+    "outDir": "./build",
     "sourceMap": true,
     "declaration": true,
     "noUnusedLocals": true,
@@ -11,9 +11,10 @@
     "lib": [
       "es6",
       "es7",
-      "dom"
+      "dom",
+      "esnext.asynciterable"
     ]
   },
-  "exclude": [],
-  "include": [ "src/**/*" ]
+  "include": [ "src/**/*" ],
+  "exclude": [ "node_modules" ]
 }

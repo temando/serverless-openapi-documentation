@@ -1,13 +1,13 @@
 import { dereference } from '@jdw/jst';
-import * as openApiValidator from 'swagger2openapi/validate';
-
+// tslint:disable-next-line no-submodule-imports
+import { validateSync as openApiValidatorSync } from 'swagger2openapi/validate';
 import * as uuid from 'uuid';
-import { IDefinition, IDefinitionConfig, IParameterConfig, IServerlessFunctionConfig } from './types';
-import { clone, merge } from './utils';
+import { IDefinition, IDefinitionConfig, IOperation, IParameterConfig, IServerlessFunctionConfig } from './types';
+import { clone, isIterable, merge } from './utils';
 
 export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
-  public version = '3.0.0-RC2';
+  public version = '3.0.0';
 
   // Base configuration object
   public definition = <IDefinition> {
@@ -43,7 +43,7 @@ export class DefinitionGenerator {
       },
     });
 
-    if (models) {
+    if (isIterable(models)) {
       for (const model of models) {
         this.definition.components.schemas[model.name] = this.cleanSchema(
           dereference(model.schema),
@@ -58,9 +58,9 @@ export class DefinitionGenerator {
     const payload: any = {};
 
     try {
-      openApiValidator.validateSync(this.definition, payload);
+      openApiValidatorSync(this.definition, payload);
     } catch (error) {
-      payload.error = JSON.parse(error.message.replace(/^Failed OpenAPI3 schema validation: /, ''));
+      payload.error = error.message;
     }
 
     return payload;
@@ -78,18 +78,13 @@ export class DefinitionGenerator {
         const httpEventConfig = httpEvent.http;
 
         if (httpEventConfig.documentation) {
-          const documentationConfig = httpEventConfig.documentation;
           // Build OpenAPI path configuration structure for each method
           const pathConfig = {
             [`/${httpEventConfig.path}`]: {
-              [httpEventConfig.method]: {
-                operationId: funcConfig._functionName,
-                summary: documentationConfig.summary || '',
-                description: documentationConfig.description || '',
-                responses: this.getResponsesFromConfig(documentationConfig),
-                parameters: this.getParametersFromConfig(documentationConfig),
-                requestBody: this.getRequestBodiesFromConfig(documentationConfig),
-              },
+              [httpEventConfig.method]: this.getOperationFromConfig(
+                funcConfig._functionName,
+                httpEventConfig.documentation,
+              ),
             },
           };
 
@@ -115,6 +110,26 @@ export class DefinitionGenerator {
 
     // Return the cleaned schema
     return cleanedSchema;
+  }
+
+  /**
+   * Generate Operation objects from the Serverless Config.
+   *
+   * @link https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md#operationObject
+   * @param funcName
+   * @param documentationConfig
+   */
+  private getOperationFromConfig (funcName: string, documentationConfig): IOperation {
+    return {
+      operationId: funcName,
+      tags: documentationConfig.tags || [],
+      deprecated: documentationConfig.deprecated || false,
+      summary: documentationConfig.summary || '',
+      description: documentationConfig.description || '',
+      parameters: this.getParametersFromConfig(documentationConfig),
+      requestBody: this.getRequestBodiesFromConfig(documentationConfig),
+      responses: this.getResponsesFromConfig(documentationConfig),
+    };
   }
 
   /**
@@ -179,6 +194,10 @@ export class DefinitionGenerator {
           parameterConfig.example = parameter.example;
         } else if (parameter.examples && Array.isArray(parameter.examples)) {
           parameterConfig.examples = parameter.examples;
+        }
+
+        if (parameter.content) {
+          parameterConfig.content = parameter.content;
         }
 
         parameters.push(parameterConfig);
