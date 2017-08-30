@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.3.0][] - 2017-08-30
 
-## Changed
+### Changed
 
 - Plugin now generates OpenAPI documentation with a version of `3.0.0` instead of `3.0.0-RC2`.
 - Operation now supports `deprecated` and `tags` properties.
@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated various build dependencies.
 - OpenAPI definition will now be smaller in most cases, choosing to omit optional properties instead of using empty defaults.
 
-## Fixed
+### Fixed
 
 - Handle when `models` is not iterable.
 - Handle when `models` have no `schema`.
