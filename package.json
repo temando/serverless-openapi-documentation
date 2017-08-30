@@ -24,7 +24,8 @@
     "test:build": "jest -c '{}' build",
     "test:coverage": "jest --coverage",
     "lint": "tslint -p tsconfig.json --type-check -c tslint.json",
-    "preversion": "yarn lint && yarn build && yarn test:build",
+    "preversion": "yarn lint && yarn build && yarn test:build && changelog-verify CHANGELOG.md",
+    "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "release": "cd build && npm publish",
     "test:project": "cd test/project && yarn sls openapi generate",
     "test:prepare": "scripts/prepareTests.bash",
@@ -40,13 +41,15 @@
     "@types/js-yaml": "^3.5.31",
     "@types/node": "^8.0.7",
     "@types/uuid": "^3.0.0",
+    "changelog-verify": "^1.0.4",
     "jest": "^20.0.4",
     "serverless": "^1.16.1",
     "ts-jest": "^20.0.6",
     "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "tslint-config-temando": "^1.1.4",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.1",
+    "version-changelog": "^2.1.0"
   },
   "dependencies": {
     "@jdw/jst": "^2.0.0-beta.9",
