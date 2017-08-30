@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.3.0][] - 2017-08-30
+
 ## Changed
 
 - Plugin now generates OpenAPI documentation with a version of `3.0.0` instead of `3.0.0-RC2`.
@@ -24,3 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.2.1] - 2017-07-07
 
 Last release prior to CHANGELOG being added.
+
+
+[Unreleased]: https://github.com/temando/serverless-openapi-documentation/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/temando/serverless-openapi-documentation/tree/v0.3.0
