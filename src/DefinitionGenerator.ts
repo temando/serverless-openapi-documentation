@@ -144,8 +144,14 @@ export class DefinitionGenerator {
       operationObj.deprecated = true;
     }
 
-    operationObj.parameters = this.getParametersFromConfig(documentationConfig);
-    operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
+    if (operationObj.requestBody) {
+      operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
+    }
+
+    if (operationObj.parameters) {
+      operationObj.parameters = this.getParametersFromConfig(documentationConfig);
+    }
+
     operationObj.responses = this.getResponsesFromConfig(documentationConfig);
 
     return operationObj;
