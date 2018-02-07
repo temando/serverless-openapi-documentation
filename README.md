@@ -330,7 +330,7 @@ plugins:
 You can confirm the plugin is correctly installed by running:
 
 ```bash
-serverless | grep "ServerlessOpenAPIDocumentation"
+serverless | grep -i "ServerlessOpenAPIDocumentation"
 ```
 
 It should return `ServerlessOpenAPIDocumentation` as one of the plugins on the list.
