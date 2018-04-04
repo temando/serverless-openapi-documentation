@@ -1,6 +1,6 @@
 {
   "name": "serverless-openapi-documentation",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
   "main": "index.js",
   "repository": {
