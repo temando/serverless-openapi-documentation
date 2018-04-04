@@ -33,5 +33,6 @@ Last release prior to CHANGELOG being added.
 
 
 [Unreleased]: https://github.com/temando/serverless-openapi-documentation/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/temando/serverless-openapi-documentation/compare/v0.4.0...v0.4.0
 [0.4.0]: https://github.com/temando/serverless-openapi-documentation/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/temando/serverless-openapi-documentation/tree/v0.3.0
