@@ -15,6 +15,7 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: yarn && yarn build && npm run release
+    skip_cleanup: true
+    script: npm run release
     on:
       tags: true
