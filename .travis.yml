@@ -15,6 +15,6 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: yarn build && npm run release
+    script: yarn && yarn build && npm run release
     on:
       tags: true
