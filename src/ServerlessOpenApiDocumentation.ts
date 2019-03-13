@@ -12,7 +12,7 @@ export class ServerlessOpenApiDocumentation {
   /** Serverless Instance */
   private serverless;
   /** CLI options */
-  private options;
+ // private options;
   /** Serverless Service Custom vars */
   private customVars;
 
@@ -25,7 +25,7 @@ export class ServerlessOpenApiDocumentation {
     // pull the serverless instance into our class vars
     this.serverless = serverless;
     // pull the CLI options into our class vars
-    this.options = options;
+    // this.options = options;
     // Serverless service custom variables
     this.customVars = this.serverless.variables.service.custom;
 

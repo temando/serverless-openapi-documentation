@@ -21,6 +21,7 @@ describe('OpenAPI Documentation Generator', () => {
     });
 
     const config = await sls.yamlParser.parse(serverlessYamlPath);
+    expect(config).not.toBeNull();
     sls.pluginManager.cliOptions = { stage: 'dev' };
 
     await sls.service.load(config);
@@ -28,8 +29,10 @@ describe('OpenAPI Documentation Generator', () => {
 
     if ('documentation' in sls.service.custom) {
       const docGen = new DefinitionGenerator(sls.service.custom.documentation);
+      docGen.parse();
 
-      expect(docGen).not.toBeNull();
+      expect(docGen.definition).not.toBeNull();
+      expect(docGen.definition).toMatchSnapshot();
     } else {
       throw new Error('Cannot find "documentation" in custom section of "serverless.yml"');
     }
