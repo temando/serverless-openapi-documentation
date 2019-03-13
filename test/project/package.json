@@ -1,6 +1,6 @@
 {
   "name": "openapi-test-package",
   "devDependencies": {
-    "serverless": "^1.16.1"
+    "serverless": "^1.38.0"
   }
 }
