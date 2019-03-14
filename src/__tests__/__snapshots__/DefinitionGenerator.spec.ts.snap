@@ -249,5 +249,11 @@ Object {
       },
     },
   },
+  "servers": Array [
+    Object {
+      "description": "Dev server",
+      "url": "https://example.com",
+    },
+  ],
 }
 `;

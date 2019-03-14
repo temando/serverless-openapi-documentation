@@ -12,6 +12,7 @@ export interface IDefinitionConfig {
   title: string;
   description: string;
   version?: string;
+  servers?: IServer[];
   models: IModels[];
 }
 
@@ -46,7 +47,12 @@ export interface IOperation {
   callbacks?: any;
   deprecated?: boolean;
   security?: any[];
-  servers?: any[];
+  servers?: IServer[];
+}
+
+export interface IServer {
+  url: string;
+  descripition: string;
 }
 
 // @see https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md#parameterObject

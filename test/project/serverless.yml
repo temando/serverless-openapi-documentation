@@ -57,6 +57,9 @@ custom:
     title: "a title"
     version: "1.2"
     description: "a description"
+    servers:
+      - url: "https://example.com"
+        description: "Dev server"
     models:
       - name: ErrorResponse
         description: This is an error

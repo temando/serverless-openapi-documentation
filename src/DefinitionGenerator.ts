@@ -30,12 +30,14 @@ export class DefinitionGenerator {
       title = '',
       description = '',
       version = uuid.v4(),
+      servers = [],
       models,
     } = this.config;
 
     merge(this.definition, {
       openapi: this.version,
       info: { title, description, version },
+      servers,
       paths: {},
       components: {
         schemas: {},
