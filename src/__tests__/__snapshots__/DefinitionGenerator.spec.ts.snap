@@ -173,6 +173,81 @@ Object {
     "version": "1.2",
   },
   "openapi": "3.0.0",
-  "paths": Object {},
+  "paths": Object {
+    "/create": Object {
+      "post": Object {
+        "description": "Creates a user and then sends a generated password email",
+        "operationId": "createUser",
+        "parameters": Array [
+          Object {
+            "description": "The username for a user to create",
+            "in": "path",
+            "name": "username",
+            "required": true,
+            "schema": Object {
+              "pattern": "^[-a-z0-9_]+$",
+              "type": "string",
+            },
+          },
+          Object {
+            "allowEmptyValue": false,
+            "description": "The user's Membership Type",
+            "in": "query",
+            "name": "membershipType",
+            "required": false,
+            "schema": Object {
+              "enum": Array [
+                "premium",
+                "standard",
+              ],
+              "type": "string",
+            },
+          },
+          Object {
+            "description": "A Session ID variable",
+            "in": "cookie",
+            "name": "SessionId",
+            "required": false,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/PutDocumentRequest",
+              },
+            },
+          },
+          "description": "A user information object",
+        },
+        "responses": Object {
+          "201": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/PutDocumentResponse",
+                },
+              },
+            },
+            "description": "A user object along with generated API Keys",
+          },
+          "500": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+            "description": "An error message when creating a new user",
+          },
+        },
+        "summary": "Create User",
+      },
+    },
+  },
 }
 `;
