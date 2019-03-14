@@ -14,6 +14,14 @@ export interface IDefinitionConfig {
   version?: string;
   servers?: IServer[];
   models: IModels[];
+  security?: ISecurity[];
+}
+
+export interface ISecurity {
+  name: string;
+  authorizerName: string;
+  type: string;
+  scheme: string;
 }
 
 export interface IDefinitionType {

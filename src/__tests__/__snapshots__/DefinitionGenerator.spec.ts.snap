@@ -165,7 +165,12 @@ Object {
         "type": "object",
       },
     },
-    "securitySchemes": Object {},
+    "securitySchemes": Object {
+      "auth": Object {
+        "scheme": "bearer",
+        "type": "http",
+      },
+    },
   },
   "info": Object {
     "description": "a description",
@@ -245,6 +250,11 @@ Object {
             "description": "An error message when creating a new user",
           },
         },
+        "security": Array [
+          Object {
+            "auth": Array [],
+          },
+        ],
         "summary": "Create User",
       },
     },
