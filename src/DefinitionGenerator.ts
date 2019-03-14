@@ -152,7 +152,7 @@ export class DefinitionGenerator {
       operationObj.deprecated = true;
     }
 
-    if (documentationConfig.requestBody) {
+    if (documentationConfig.requestModels) {
       operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
     }
 
