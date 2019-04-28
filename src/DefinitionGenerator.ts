@@ -293,7 +293,7 @@ export class DefinitionGenerator {
   }
 
   private attachExamples (target, config) {
-    if (target.examples && Array.isArray(target.examples)) {
+    if (target.examples) {
       merge(config, { examples: clone(target.examples) });
     } else if (target.example) {
       merge(config, { example: clone(target.example) });
