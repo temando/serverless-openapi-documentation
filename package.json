@@ -55,7 +55,7 @@
   "dependencies": {
     "@jdw/jst": "^2.0.0-beta.15",
     "bluebird": "^3.5.0",
-    "chalk": "^2.0.1",
+    "chalk": "^1.1.3",
     "fs-extra": "^4.0.1",
     "js-yaml": "^3.8.4",
     "lutils": "^2.4.0",
