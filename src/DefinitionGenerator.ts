@@ -1,9 +1,9 @@
-import { dereference } from '@jdw/jst';
 // tslint:disable-next-line no-submodule-imports
 import { validateSync as openApiValidatorSync } from 'swagger2openapi/validate';
 import * as uuid from 'uuid';
 import { IDefinition, IDefinitionConfig, IOperation, IParameterConfig, IServerlessFunctionConfig } from './types';
-import { clone, isIterable, merge } from './utils';
+import { clone, isIterable, merge, omit } from './utils';
+import { JSONSchema7 } from 'json-schema';
 
 export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
@@ -49,13 +49,38 @@ export class DefinitionGenerator {
           continue;
         }
 
-        this.definition.components.schemas[model.name] = this.cleanSchema(
-          dereference(model.schema),
-        );
+        for (const definitionName of Object.keys(model.schema.definitions || {})) {
+          const definition = model.schema.definitions[definitionName];
+          if(typeof definition !== 'boolean'){
+            this.definition.components.schemas[definitionName] = this.cleanSchema(this.updateReferences(definition))
+          }
+        }
+
+        const schemaWithoutDefinitions = omit(model.schema, ['definitions']);
+
+        this.definition.components.schemas[model.name] = this.cleanSchema(this.updateReferences(schemaWithoutDefinitions))
       }
     }
 
     return this;
+  }
+
+  private updateReferences(schema: JSONSchema7): JSONSchema7 {
+    const cloned = clone(schema) as JSONSchema7;
+
+    if(cloned.$ref) {
+      cloned.$ref = cloned.$ref.replace('#/definitions', '#/components/schemas');
+    } else {
+      for(const key of Object.getOwnPropertyNames(cloned)) {
+        const value = cloned[key];
+
+        if (typeof value === 'object') {
+          cloned[key] = this.updateReferences(value);
+        }
+      }
+    }
+
+    return cloned;
   }
 
   public validate (): { valid: boolean, context: string[], warnings: any[], error?: any[] } {

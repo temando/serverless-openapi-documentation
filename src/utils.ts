@@ -10,3 +10,13 @@ export function isIterable (obj) {
 
   return typeof obj[Symbol.iterator] === 'function';
 }
+
+export function omit<T extends Object> (obj: T, keys: string[]): T {
+  const cloned = clone(obj);
+
+  for(const key of keys) {
+    delete cloned[key];
+  }
+
+  return cloned;
+}
