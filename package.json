@@ -39,6 +39,7 @@
     "@types/fs-extra": "^4.0.0",
     "@types/jest": "^20.0.2",
     "@types/js-yaml": "^3.5.31",
+    "@types/json-schema": "^7.0.3",
     "@types/node": "^8.0.7",
     "@types/uuid": "^3.0.0",
     "changelog-verify": "^1.0.4",
