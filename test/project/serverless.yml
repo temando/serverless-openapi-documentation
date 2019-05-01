@@ -5,7 +5,9 @@ provider:
   runtime: nodejs6.10
 
 plugins:
-  - serverless-openapi-documentation
+  localPath: /Users/alex/dev/serverless-openapi-documentation
+  modules:
+    - build
 
 functions:
   createUser:
@@ -76,3 +78,8 @@ custom:
               properties:
                 SomeAttribute:
                   type: string
+
+      - name: RecursiveResponse
+        description: Recursive response example
+        contentType: application/json
+        schema: ${file(models/RecursiveResponse.json)}

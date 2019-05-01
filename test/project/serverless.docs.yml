@@ -23,7 +23,7 @@ endpoints:
     cookieParams:
       - name: SessionId
         description: A Session ID variable
-        schema: 
+        schema:
           type: string
     methodResponses:
       - statusCode: 201
@@ -60,3 +60,7 @@ documentation:
             properties:
               SomeAttribute:
                 type: string
+    - name: RecursiveResponse
+      description: Recursive response example
+      contentType: application/json
+      schema: ${file(models/RecursiveResponse.json)}

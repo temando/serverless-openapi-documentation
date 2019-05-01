@@ -1,9 +1,10 @@
+import { JSONSchema7 } from 'json-schema';
 
 export interface IModels {
   name: string;
   description: string;
   contentType: string;
-  schema: object | any[];
+  schema: JSONSchema7;
   examples: any[];
   example: object;
 }

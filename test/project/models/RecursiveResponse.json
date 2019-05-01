@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "folder": {
+      "type": "object",
+      "title": "Folder Schema",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "3ba1c69c-3c81-4d6d-b304-873d898b2e3c",
+          "format": "uuid"
+        },
+        "folders": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/folder"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["id", "name", "folders", "checklists"]
+    }
+  },
+  "type": "object",
+  "title": "Folders Response Schema",
+  "properties": {
+    "data": {
+      "$ref": "#/definitions/folder"
+    }
+  }
+}
