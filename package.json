@@ -5,9 +5,9 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/temando/serverless-openapi-documentation.git"
+    "url": "https://github.com/conqa/serverless-openapi-documentation.git"
   },
-  "bugs": "https://github.com/temando/serverless-openapi-documentation/issues",
+  "bugs": "https://github.com/conqa/serverless-openapi-documentation/issues",
   "author": "Abilio Henrique <abilio.henrique@temando.com>",
   "contributors": [
     "Abilio Henrique <abilio.henrique@temando.com>",
