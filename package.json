@@ -1,6 +1,6 @@
 {
   "name": "@conqa/serverless-openapi-documentation",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
   "main": "index.js",
   "repository": {
