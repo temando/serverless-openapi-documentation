@@ -5,7 +5,7 @@ provider:
   runtime: nodejs6.10
 
 plugins:
-  localPath: /Users/alex/dev/serverless-openapi-documentation
+  localPath: ../../
   modules:
     - build
 
