@@ -3,29 +3,55 @@ import * as fs from 'fs';
 import * as YAML from 'js-yaml';
 import { inspect } from 'util';
 import { DefinitionGenerator } from './DefinitionGenerator';
-import { IDefinitionType, ILog } from './types';
+import { IDefinitionType, ILog, Format, IDefinitionConfig } from './types';
 import { merge } from './utils';
+import * as Serverless from 'serverless';
+
+interface Options {
+  indent: number,
+  format: Format,
+  output: string,
+}
+
+interface ProcessedInput {
+  options: Options;
+}
+
+interface CustomVars {
+  documentation: IDefinitionConfig;
+}
+
+interface Service {
+  custom: CustomVars;
+}
+
+interface Variables {
+  service: Service
+}
+
+interface FullServerless extends Serverless {
+  variables: Variables;
+  processedInput: ProcessedInput;
+}
 
 export class ServerlessOpenApiDocumentation {
   public hooks;
   public commands;
   /** Serverless Instance */
-  private serverless;
-  /** CLI options */
-  // private options;
+  private serverless: FullServerless;
+
   /** Serverless Service Custom vars */
-  private customVars;
+  private customVars: CustomVars;
 
   /**
    * Constructor
    * @param serverless
    * @param options
    */
-  constructor (serverless, options) {
+  constructor (serverless: FullServerless, options) {
+
     // pull the serverless instance into our class vars
     this.serverless = serverless;
-    // pull the CLI options into our class vars
-    // this.options = options;
     // Serverless service custom variables
     this.customVars = this.serverless.variables.service.custom;
 
@@ -73,15 +99,15 @@ export class ServerlessOpenApiDocumentation {
    */
   private processCliInput (): IDefinitionType {
     const config: IDefinitionType = {
-      format: 'yaml',
+      format: Format.yaml,
       file: 'openapi.yml',
       indent: 2,
     };
 
     config.indent = this.serverless.processedInput.options.indent || 2;
-    config.format = this.serverless.processedInput.options.format || 'yaml';
+    config.format = this.serverless.processedInput.options.format || Format.yaml;
 
-    if (['yaml', 'json'].indexOf(config.format.toLowerCase()) < 0) {
+    if ([Format.yaml, Format.json].indexOf(config.format) < 0) {
       throw new Error('Invalid Output Format Specified - must be one of "yaml" or "json"');
     }
 

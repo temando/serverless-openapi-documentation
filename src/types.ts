@@ -16,9 +16,14 @@ export interface IDefinitionConfig {
   models: IModels[];
 }
 
+export enum Format {
+  yaml = 'yaml',
+  json = 'json'
+};
+
 export interface IDefinitionType {
   file: string;
-  format: 'yaml' | 'json';
+  format: Format;
   indent: number;
 }
 
