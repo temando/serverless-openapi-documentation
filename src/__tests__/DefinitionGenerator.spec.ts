@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as Serverless from 'serverless';
 import { DefinitionGenerator } from '../DefinitionGenerator';
-import { merge } from '../utils';
+import _ = require('lodash');
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -49,7 +49,7 @@ describe('OpenAPI Documentation Generator', () => {
 
     const funcConfigs = sls.service.getAllFunctions().map((functionName) => {
       const func = sls.service.getFunction(functionName);
-      return merge({ _functionName: functionName }, func);
+      return _.merge({ _functionName: functionName }, func);
     });
 
     docGen.readFunctions(funcConfigs);

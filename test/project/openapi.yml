@@ -189,13 +189,43 @@ components:
 info:
   title: ''
   description: ''
-  version: ae88c557-65e0-4feb-a885-ebe66a58cca8
+  version: 96d3d004-1a24-4384-9df7-1e7416393223
 paths:
   /create:
     post:
       operationId: createUser
       summary: Create User
       description: Creates a user and then sends a generated password email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutDocumentRequest'
+        description: A user information object
+      parameters:
+        - name: username
+          in: path
+          description: The username for a user to create
+          required: true
+          schema:
+            type: string
+            pattern: '^[-a-z0-9_]+$'
+        - name: membershipType
+          in: query
+          description: The user's Membership Type
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            enum:
+              - premium
+              - standard
+        - name: SessionId
+          in: cookie
+          description: A Session ID variable
+          required: false
+          schema:
+            type: string
       responses:
         '201':
           description: A user object along with generated API Keys
