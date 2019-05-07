@@ -3,6 +3,10 @@
   "version": "1.0.4",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
   "main": "index.js",
+  "engines": {
+    "node": ">=6.0.0",
+    "npm": ">=3.8.6"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/conqa/serverless-openapi-documentation.git"
@@ -20,17 +24,17 @@
   ],
   "license": "MIT",
   "scripts": {
-    "test": "jest",
-    "test:build": "jest -c '{}' build",
-    "test:coverage": "jest --coverage",
-    "lint": "tslint -p tsconfig.json --type-check -c tslint.json",
-    "preversion": "yarn lint && yarn build && yarn test:build && changelog-verify CHANGELOG.md",
+    "test": "jest -c ./jest.config.js",
+    "test:build": "jest -c '{ \"testRegex\": \".spec.js$\"}' build",
+    "test:coverage": "jest -c ./jest.config.js --coverage",
+    "lint": "tslint --format stylish -p tsconfig.json --type-check -c tslint.json",
+    "preversion": "npm run lint && npm run build && npm run test:build && changelog-verify CHANGELOG.md",
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "release": "cd build && npm publish",
-    "test:project": "cd test/project && yarn sls openapi generate",
+    "test:project": "cd test/project && ./node_modules/.bin/sls openapi generate",
     "test:prepare": "scripts/prepareTests.bash",
-    "build:link": "yarn build && cd build && yarn link",
-    "build:watch": "yarn build && tsc --watch",
+    "build:link": "npm run build && cd build && npm link",
+    "build:watch": "npm run build && tsc --watch",
     "build": "scripts/build.bash"
   },
   "devDependencies": {
@@ -43,13 +47,13 @@
     "@types/node": "^8.0.7",
     "@types/uuid": "^3.0.0",
     "changelog-verify": "^1.0.4",
-    "jest": "^20.0.4",
+    "jest": "^24.8.0",
     "serverless": "^1.16.1",
-    "ts-jest": "^20.0.6",
+    "ts-jest": "^24.0.2",
     "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "tslint-config-temando": "^1.1.4",
-    "typescript": "^2.4.1",
+    "typescript": "^3.4.5",
     "version-changelog": "^2.1.0"
   },
   "dependencies": {

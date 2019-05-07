@@ -2,13 +2,12 @@ language: node_js
 node_js: ["6"]
 
 install:
-  - yarn install
+  - npm install
 
 script:
-  - yarn lint
-  - yarn build
-  - yarn test:build
-  - DEBUG=true yarn test:coverage
+  - npm run lint
+  - npm run build
+  - npm run test:build
 
 before_deploy:
   - echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ~/.npmrc

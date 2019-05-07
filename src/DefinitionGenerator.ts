@@ -129,7 +129,7 @@ export class DefinitionGenerator {
    * @param schema JSON Schema Object
    */
   private updateReferences (schema: JSONSchema7): JSONSchema7 {
-    const cloned = clone(schema) as JSONSchema7;
+    const cloned = clone(schema);
 
     if (cloned.$ref) {
       cloned.$ref = cloned.$ref.replace('#/definitions', '#/components/schemas');
