@@ -1,54 +1,55 @@
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
-import { inspect } from 'util';
-import { DefinitionGenerator } from './DefinitionGenerator';
-import { IDefinitionType, ILog, Format, IDefinitionConfig } from './types';
-import * as Serverless from 'serverless';
 import _ = require('lodash');
+import * as Serverless from 'serverless';
+import { inspect } from 'util';
 
-interface Options {
-  indent: number,
-  format: Format,
-  output: string,
+import { DefinitionGenerator } from './DefinitionGenerator';
+import { Format, IDefinitionConfig, IDefinitionType, ILog } from './types';
+
+interface IOptions {
+  indent: number;
+  format: Format;
+  output: string;
 }
 
-interface ProcessedInput {
-  options: Options;
+interface IProcessedInput {
+  options: IOptions;
 }
 
-interface CustomVars {
+interface ICustomVars {
   documentation: IDefinitionConfig;
 }
 
-interface Service {
-  custom: CustomVars;
+interface IService {
+  custom: ICustomVars;
 }
 
-interface Variables {
-  service: Service
+interface IVariables {
+  service: IService;
 }
 
-interface FullServerless extends Serverless {
-  variables: Variables;
-  processedInput: ProcessedInput;
+interface IFullServerless extends Serverless {
+  variables: IVariables;
+  processedInput: IProcessedInput;
 }
 
 export class ServerlessOpenApiDocumentation {
   public hooks;
   public commands;
   /** Serverless Instance */
-  private serverless: FullServerless;
+  private serverless: IFullServerless;
 
   /** Serverless Service Custom vars */
-  private customVars: CustomVars;
+  private customVars: ICustomVars;
 
   /**
    * Constructor
    * @param serverless
    * @param options
    */
-  constructor (serverless: FullServerless, options) {
+  constructor (serverless: IFullServerless, options) {
 
     // pull the serverless instance into our class vars
     this.serverless = serverless;
@@ -91,37 +92,6 @@ export class ServerlessOpenApiDocumentation {
 
   log: ILog = (...str: string[]) => {
     process.stdout.write(str.join(' '));
-  }
-
-  /**
-   * Processes CLI input by reading the input from serverless
-   * @returns config IConfigType
-   */
-  private processCliInput (): IDefinitionType {
-    const config: IDefinitionType = {
-      format: Format.yaml,
-      file: 'openapi.yml',
-      indent: 2,
-    };
-
-    config.indent = this.serverless.processedInput.options.indent || 2;
-    config.format = this.serverless.processedInput.options.format || Format.yaml;
-
-    if ([Format.yaml, Format.json].indexOf(config.format) < 0) {
-      throw new Error('Invalid Output Format Specified - must be one of "yaml" or "json"');
-    }
-
-    config.file = this.serverless.processedInput.options.output ||
-      ((config.format === 'yaml') ? 'openapi.yml' : 'openapi.json');
-
-    this.log(
-      `${chalk.bold.green('[OPTIONS]')}`,
-      `format: "${chalk.bold.red(config.format)}",`,
-      `output file: "${chalk.bold.red(config.file)}",`,
-      `indentation: "${chalk.bold.red(String(config.indent))}"\n\n`,
-    );
-
-    return config;
   }
 
   /**
@@ -187,5 +157,36 @@ export class ServerlessOpenApiDocumentation {
     fs.writeFileSync(config.file, output);
 
     this.log(`${chalk.bold.green('[OUTPUT]')} To "${chalk.bold.red(config.file)}"\n`);
+  }
+
+  /**
+   * Processes CLI input by reading the input from serverless
+   * @returns config IConfigType
+   */
+  private processCliInput (): IDefinitionType {
+    const config: IDefinitionType = {
+      format: Format.yaml,
+      file: 'openapi.yml',
+      indent: 2,
+    };
+
+    config.indent = this.serverless.processedInput.options.indent || 2;
+    config.format = this.serverless.processedInput.options.format || Format.yaml;
+
+    if ([Format.yaml, Format.json].indexOf(config.format) < 0) {
+      throw new Error('Invalid Output Format Specified - must be one of "yaml" or "json"');
+    }
+
+    config.file = this.serverless.processedInput.options.output ||
+      ((config.format === 'yaml') ? 'openapi.yml' : 'openapi.json');
+
+    this.log(
+      `${chalk.bold.green('[OPTIONS]')}`,
+      `format: "${chalk.bold.red(config.format)}",`,
+      `output file: "${chalk.bold.red(config.file)}",`,
+      `indentation: "${chalk.bold.red(String(config.indent))}"\n\n`,
+    );
+
+    return config;
   }
 }

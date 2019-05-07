@@ -1,13 +1,12 @@
-import * as path from 'path';
-import * as _ from 'lodash';
 import { JSONSchema7 } from 'json-schema';
-
 import * as $RefParser from 'json-schema-ref-parser';
+import * as _ from 'lodash';
+import * as path from 'path';
 
 import { IModel } from './types';
 import { cleanSchema } from './utils';
 
-export async function parseModels(models: IModel[], root: string): Promise<{}> {
+export async function parseModels (models: IModel[], root: string): Promise<{}> {
   const schemas = {};
 
   if (!_.isArrayLike(models)) {
@@ -23,25 +22,25 @@ export async function parseModels(models: IModel[], root: string): Promise<{}> {
       ? await $RefParser.bundle(path.resolve(root, model.schema))
       : model.schema) as JSONSchema7;
 
-      _.assign(schemas, updateReferences(schema.definitions), {
-        [model.name]: updateReferences(cleanSchema(schema)),
-      });
+    _.assign(schemas, updateReferences(schema.definitions), {
+      [model.name]: updateReferences(cleanSchema(schema)),
+    });
   }
 
   return schemas;
 }
 
 function updateReferences (schema: JSONSchema7): JSONSchema7 {
-  if(!schema) {
+  if (!schema) {
     return schema;
   }
 
-  const cloned = _.cloneDeep(schema) as JSONSchema7;
+  const cloned = _.cloneDeep(schema);
 
   if (cloned.$ref) {
     return {
       ...cloned,
-      $ref: cloned.$ref.replace('#/definitions', '#/components/schemas')
+      $ref: cloned.$ref.replace('#/definitions', '#/components/schemas'),
     };
   }
 

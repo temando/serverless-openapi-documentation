@@ -1,7 +1,7 @@
+import _ = require('lodash');
 import * as path from 'path';
 import * as Serverless from 'serverless';
 import { DefinitionGenerator } from '../DefinitionGenerator';
-import _ = require('lodash');
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -45,7 +45,7 @@ describe('OpenAPI Documentation Generator', () => {
     const docGen = new DefinitionGenerator(sls.service.custom.documentation, servicePath);
 
     // implementation copied from ServerlessOpenApiDocumentation.ts
-    docGen.parse();
+    await docGen.parse();
 
     const funcConfigs = sls.service.getAllFunctions().map((functionName) => {
       const func = sls.service.getFunction(functionName);

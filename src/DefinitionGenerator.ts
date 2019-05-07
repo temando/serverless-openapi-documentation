@@ -1,11 +1,11 @@
+import _ = require('lodash');
 // tslint:disable-next-line no-submodule-imports
 import { validateSync as openApiValidatorSync } from 'swagger2openapi/validate';
 import * as uuid from 'uuid';
 
+import { parseModels } from './parse';
 import { IDefinition, IDefinitionConfig, IOperation, IParameterConfig, IServerlessFunctionConfig } from './types';
 import { cleanSchema } from './utils';
-import { parseModels } from './parse';
-import _ = require('lodash');
 
 export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
