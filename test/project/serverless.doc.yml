@@ -26,3 +26,13 @@ documentation:
       description: Recursive response example
       contentType: application/json
       schema: models/RecursiveResponse.json
+
+    - name: ExternalTest
+      description: External reference example
+      contentType: application/json
+      schema: models/ExternalOne.json
+
+    - name: ExternalTest2
+      description: External reference example 2
+      contentType: application/json
+      schema: models/ExternalTwo.json

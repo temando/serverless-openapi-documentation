@@ -4,7 +4,7 @@ import * as uuid from 'uuid';
 
 import { IDefinition, IDefinitionConfig, IOperation, IParameterConfig, IServerlessFunctionConfig } from './types';
 import { cleanSchema } from './utils';
-import { parseModels } from './SchemaBuilder';
+import { parseModels } from './parse';
 import _ = require('lodash');
 
 export class DefinitionGenerator {

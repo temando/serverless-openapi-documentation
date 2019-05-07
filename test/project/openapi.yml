@@ -139,11 +139,33 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/folder'
+    data:
+      description: external type referenced in another schema
+      type: object
+      properties:
+        one:
+          type: string
+          format: uri
+        two:
+          type: string
+      additionalProperties: true
+    ExternalTest:
+      type: object
+      title: ExternalTest
+      properties:
+        data:
+          $ref: '#/components/schemas/data'
+    ExternalTest2:
+      type: object
+      title: ExternalTest2
+      properties:
+        data:
+          $ref: '#/components/schemas/data'
   securitySchemes: {}
 info:
   title: ''
   description: ''
-  version: 09299b07-9e3d-4b1c-949e-924a11084b28
+  version: a04837c6-b32a-4f0f-9c25-0c72112a4136
 paths:
   /create:
     post:
