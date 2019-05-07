@@ -139,6 +139,30 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/folder'
+    directory:
+      type: object
+      title: Directory Schema
+      properties:
+        id:
+          type: string
+          example: 3ba1c69c-3c81-4d6d-b304-873d898b2e3c
+          format: uuid
+        directories:
+          type: array
+          items:
+            $ref: '#/components/schemas/directory'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - directorys
+        - checklists
+    RecursiveResponseTwo:
+      type: object
+      title: Directories Response Schema
+      properties:
+        data:
+          $ref: '#/components/schemas/directory'
     data:
       description: external type referenced in another schema
       type: object
@@ -165,7 +189,7 @@ components:
 info:
   title: ''
   description: ''
-  version: a04837c6-b32a-4f0f-9c25-0c72112a4136
+  version: ae88c557-65e0-4feb-a885-ebe66a58cca8
 paths:
   /create:
     post:

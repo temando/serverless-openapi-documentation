@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "directory": {
+      "type": "object",
+      "title": "Directory Schema",
+      "properties": {
+        "id": {
+          "type": "string",
+          "example": "3ba1c69c-3c81-4d6d-b304-873d898b2e3c",
+          "format": "uuid"
+        },
+        "directories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/directory"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": ["id", "name", "directorys", "checklists"]
+    }
+  },
+  "type": "object",
+  "title": "Directories Response Schema",
+  "properties": {
+    "data": {
+      "$ref": "#/definitions/directory"
+    }
+  }
+}

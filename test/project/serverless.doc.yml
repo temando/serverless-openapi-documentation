@@ -27,6 +27,11 @@ documentation:
       contentType: application/json
       schema: models/RecursiveResponse.json
 
+    - name: RecursiveResponseTwo
+      description: Recursive response example
+      contentType: application/json
+      schema: ${file(models/RecursiveResponseTwo.json)}
+
     - name: ExternalTest
       description: External reference example
       contentType: application/json

@@ -19,19 +19,13 @@ export async function parseModels(models: IModel[], root: string): Promise<{}> {
       continue;
     }
 
-    if (typeof model.schema === 'string') {
-      const fullPath = path.resolve(root, model.schema);
+    const schema = (typeof model.schema === 'string'
+      ? await $RefParser.bundle(path.resolve(root, model.schema))
+      : model.schema) as JSONSchema7;
 
-      const schema = await $RefParser.bundle(fullPath) as JSONSchema7;
-
-      _.assign(schemas, updateReferences(schema.definitions));
-
-      schemas[model.name] = updateReferences(cleanSchema(schema));
-    }
-
-    if(typeof model.schema === 'object') {
-      schemas[model.name] = updateReferences(cleanSchema(model.schema));
-    }
+      _.assign(schemas, updateReferences(schema.definitions), {
+        [model.name]: updateReferences(cleanSchema(schema)),
+      });
   }
 
   return schemas;

@@ -2,7 +2,7 @@ export interface IModel {
   name: string;
   description: string;
   contentType: string;
-  schema: string;
+  schema: string | object;
   examples: any[];
   example: object;
 }
