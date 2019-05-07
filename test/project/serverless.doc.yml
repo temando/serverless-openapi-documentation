@@ -1,0 +1,43 @@
+documentation:
+  models:
+    - name: ErrorResponse
+      description: This is an error
+      contentType: application/json
+      schema: models/ErrorResponse.json
+
+    - name: PutDocumentResponse
+      description: PUT Document response model (external reference example)
+      contentType: application/json
+      schema: models/PutDocumentResponse.json
+
+    - name: PutDocumentRequest
+      description: PUT Document request model (inline example)
+      contentType: application/json
+      schema:
+        $schema: http://json-schema.org/draft-04/schema#
+        properties:
+          SomeObject:
+            type: object
+            properties:
+              SomeAttribute:
+                type: string
+
+    - name: RecursiveResponse
+      description: Recursive response example
+      contentType: application/json
+      schema: models/RecursiveResponse.json
+
+    - name: RecursiveResponseTwo
+      description: Recursive response example
+      contentType: application/json
+      schema: ${file(models/RecursiveResponseTwo.json)}
+
+    - name: ExternalTest
+      description: External reference example
+      contentType: application/json
+      schema: models/ExternalOne.json
+
+    - name: ExternalTest2
+      description: External reference example 2
+      contentType: application/json
+      schema: models/ExternalTwo.json

@@ -1,7 +1,7 @@
+import _ = require('lodash');
 import * as path from 'path';
 import * as Serverless from 'serverless';
 import { DefinitionGenerator } from '../DefinitionGenerator';
-import { merge } from '../utils';
 
 class ServerlessInterface extends Serverless {
   public service: any = {};
@@ -14,8 +14,10 @@ class ServerlessInterface extends Serverless {
 describe('OpenAPI Documentation Generator', () => {
   let sls: ServerlessInterface;
 
+  const servicePath = path.join(__dirname, '../../test/project');
+
   beforeEach(async () => {
-    const servicePath = path.join(__dirname, '../../test/project');
+
     const serverlessYamlPath = path.join(servicePath, './serverless.yml');
     sls = new Serverless();
 
@@ -35,19 +37,19 @@ describe('OpenAPI Documentation Generator', () => {
   });
 
   it('Generates OpenAPI document', async () => {
-    const docGen = new DefinitionGenerator(sls.service.custom.documentation);
+    const docGen = new DefinitionGenerator(sls.service.custom.documentation, servicePath);
     expect(docGen).not.toBeNull();
   });
 
   it('adds paths to OpenAPI output from function configuration', async () => {
-    const docGen = new DefinitionGenerator(sls.service.custom.documentation);
+    const docGen = new DefinitionGenerator(sls.service.custom.documentation, servicePath);
 
     // implementation copied from ServerlessOpenApiDocumentation.ts
-    docGen.parse();
+    await docGen.parse();
 
     const funcConfigs = sls.service.getAllFunctions().map((functionName) => {
       const func = sls.service.getFunction(functionName);
-      return merge({ _functionName: functionName }, func);
+      return _.merge({ _functionName: functionName }, func);
     });
 
     docGen.readFunctions(funcConfigs);

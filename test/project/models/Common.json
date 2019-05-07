@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "external": {
+      "description": "external type referenced in another schema",
+      "type": "object",
+      "properties": {
+        "one": {
+          "type": "string",
+          "format": "uri"
+        },
+        "two": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

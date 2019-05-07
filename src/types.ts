@@ -1,10 +1,10 @@
 import { JSONSchema7 } from 'json-schema';
 
-export interface IModels {
+export interface IModel {
   name: string;
   description: string;
   contentType: string;
-  schema: JSONSchema7;
+  schema: string | JSONSchema7;
   examples: any[];
   example: object;
 }
@@ -13,12 +13,17 @@ export interface IDefinitionConfig {
   title: string;
   description: string;
   version?: string;
-  models: IModels[];
+  models: IModel[];
+}
+
+export enum Format {
+  yaml = 'yaml',
+  json = 'json',
 }
 
 export interface IDefinitionType {
   file: string;
-  format: 'yaml' | 'json';
+  format: Format;
   indent: number;
 }
 

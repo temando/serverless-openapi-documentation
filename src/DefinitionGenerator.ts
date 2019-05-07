@@ -1,10 +1,11 @@
-import { JSONSchema7 } from 'json-schema';
+import _ = require('lodash');
 // tslint:disable-next-line no-submodule-imports
 import { validateSync as openApiValidatorSync } from 'swagger2openapi/validate';
 import * as uuid from 'uuid';
 
+import { parseModels } from './parse';
 import { IDefinition, IDefinitionConfig, IOperation, IParameterConfig, IServerlessFunctionConfig } from './types';
-import { clone, isIterable, merge, omit } from './utils';
+import { cleanSchema } from './utils';
 
 export class DefinitionGenerator {
   // The OpenAPI version we currently validate against
@@ -18,15 +19,17 @@ export class DefinitionGenerator {
 
   public config: IDefinitionConfig;
 
+  private root: string;
+
   /**
    * Constructor
-   * @param serviceDescriptor IServiceDescription
    */
-  constructor (config: IDefinitionConfig) {
-    this.config = clone(config);
+  constructor (config: IDefinitionConfig, root: string) {
+    this.config = _.cloneDeep(config);
+    this.root = root;
   }
 
-  public parse () {
+  public async parse () {
     const {
       title = '',
       description = '',
@@ -34,7 +37,7 @@ export class DefinitionGenerator {
       models,
     } = this.config;
 
-    merge(this.definition, {
+    _.merge(this.definition, {
       openapi: this.version,
       info: { title, description, version },
       paths: {},
@@ -44,24 +47,7 @@ export class DefinitionGenerator {
       },
     });
 
-    if (isIterable(models)) {
-      for (const model of models) {
-        if (!model.schema) {
-          continue;
-        }
-
-        for (const definitionName of Object.keys(model.schema.definitions || {})) {
-          const definition = model.schema.definitions[definitionName];
-          if (typeof definition !== 'boolean') {
-            this.definition.components.schemas[definitionName] = this.cleanSchema(this.updateReferences(definition));
-          }
-        }
-
-        const schemaWithoutDefinitions = omit(model.schema, ['definitions']);
-
-        this.definition.components.schemas[model.name] = this.cleanSchema(this.updateReferences(schemaWithoutDefinitions));
-      }
-    }
+    this.definition.components.schemas = await parseModels(models, this.root);
 
     return this;
   }
@@ -101,49 +87,10 @@ export class DefinitionGenerator {
           };
 
           // merge path configuration into main configuration
-          merge(this.definition.paths, pathConfig);
+          _.merge(this.definition.paths, pathConfig);
         }
       }
     }
-  }
-
-  /**
-   * Cleans schema objects to make them OpenAPI compatible
-   * @param schema JSON Schema Object
-   */
-  private cleanSchema (schema) {
-    // Clone the schema for manipulation
-    const cleanedSchema = clone(schema);
-
-    // Strip $schema from schemas
-    if (cleanedSchema.$schema) {
-      delete cleanedSchema.$schema;
-    }
-
-    // Return the cleaned schema
-    return cleanedSchema;
-  }
-
-  /**
-   * Walks through the schema object recursively and updates references to point to openapi's components
-   * @param schema JSON Schema Object
-   */
-  private updateReferences (schema: JSONSchema7): JSONSchema7 {
-    const cloned = clone(schema);
-
-    if (cloned.$ref) {
-      cloned.$ref = cloned.$ref.replace('#/definitions', '#/components/schemas');
-    } else {
-      for (const key of Object.getOwnPropertyNames(cloned)) {
-        const value = cloned[key];
-
-        if (typeof value === 'object') {
-          cloned[key] = this.updateReferences(value);
-        }
-      }
-    }
-
-    return cloned;
   }
 
   /**
@@ -240,7 +187,7 @@ export class DefinitionGenerator {
         }
 
         if (parameter.schema) {
-          parameterConfig.schema = this.cleanSchema(parameter.schema);
+          parameterConfig.schema = cleanSchema(parameter.schema);
         }
 
         if (parameter.example) {
@@ -299,7 +246,7 @@ export class DefinitionGenerator {
             reqBodyConfig.description = documentationConfig.requestBody.description;
           }
 
-          merge(requestBodies, reqBodyConfig);
+          _.merge(requestBodies, reqBodyConfig);
         }
       }
     }
@@ -309,9 +256,9 @@ export class DefinitionGenerator {
 
   private attachExamples (target, config) {
     if (target.examples && Array.isArray(target.examples)) {
-      merge(config, { examples: clone(target.examples) });
+      _.merge(config, { examples: _.cloneDeep(target.examples) });
     } else if (target.example) {
-      merge(config, { example: clone(target.example) });
+      _.merge(config, { example: _.cloneDeep(target.example) });
     }
   }
 
@@ -339,12 +286,12 @@ export class DefinitionGenerator {
               description: header.description || `${header.name} header`,
             };
             if (header.schema) {
-              methodResponseConfig.headers[header.name].schema = this.cleanSchema(header.schema);
+              methodResponseConfig.headers[header.name].schema = cleanSchema(header.schema);
             }
           }
         }
 
-        merge(responses, {
+        _.merge(responses, {
           [response.statusCode]: methodResponseConfig,
         });
       }
@@ -370,7 +317,7 @@ export class DefinitionGenerator {
 
         this.attachExamples(responseModel, resModelConfig);
 
-        merge(content, { [responseKey] : resModelConfig });
+        _.merge(content, { [responseKey] : resModelConfig });
       }
     }
 

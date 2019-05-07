@@ -139,17 +139,93 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/folder'
+    directory:
+      type: object
+      title: Directory Schema
+      properties:
+        id:
+          type: string
+          example: 3ba1c69c-3c81-4d6d-b304-873d898b2e3c
+          format: uuid
+        directories:
+          type: array
+          items:
+            $ref: '#/components/schemas/directory'
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - directorys
+        - checklists
+    RecursiveResponseTwo:
+      type: object
+      title: Directories Response Schema
+      properties:
+        data:
+          $ref: '#/components/schemas/directory'
+    data:
+      description: external type referenced in another schema
+      type: object
+      properties:
+        one:
+          type: string
+          format: uri
+        two:
+          type: string
+      additionalProperties: true
+    ExternalTest:
+      type: object
+      title: ExternalTest
+      properties:
+        data:
+          $ref: '#/components/schemas/data'
+    ExternalTest2:
+      type: object
+      title: ExternalTest2
+      properties:
+        data:
+          $ref: '#/components/schemas/data'
   securitySchemes: {}
 info:
   title: ''
   description: ''
-  version: dc173422-424a-494c-a98e-98f16814d721
+  version: 96d3d004-1a24-4384-9df7-1e7416393223
 paths:
   /create:
     post:
       operationId: createUser
       summary: Create User
       description: Creates a user and then sends a generated password email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutDocumentRequest'
+        description: A user information object
+      parameters:
+        - name: username
+          in: path
+          description: The username for a user to create
+          required: true
+          schema:
+            type: string
+            pattern: '^[-a-z0-9_]+$'
+        - name: membershipType
+          in: query
+          description: The user's Membership Type
+          required: false
+          allowEmptyValue: false
+          schema:
+            type: string
+            enum:
+              - premium
+              - standard
+        - name: SessionId
+          in: cookie
+          description: A Session ID variable
+          required: false
+          schema:
+            type: string
       responses:
         '201':
           description: A user object along with generated API Keys
