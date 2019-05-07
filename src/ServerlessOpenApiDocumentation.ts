@@ -1,11 +1,11 @@
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as fs from 'fs';
 import * as YAML from 'js-yaml';
 import { inspect } from 'util';
 import { DefinitionGenerator } from './DefinitionGenerator';
 import { IDefinitionType, ILog, Format, IDefinitionConfig } from './types';
-import { merge } from './utils';
 import * as Serverless from 'serverless';
+import _ = require('lodash');
 
 interface Options {
   indent: number,
@@ -127,17 +127,17 @@ export class ServerlessOpenApiDocumentation {
   /**
    * Generates OpenAPI Documentation based on serverless configuration and functions
    */
-  private generate () {
+  public async generate () {
     this.log(chalk.bold.underline('OpenAPI v3 Documentation Generator\n\n'));
     // Instantiate DocumentGenerator
-    const generator = new DefinitionGenerator(this.customVars.documentation);
+    const generator = new DefinitionGenerator(this.customVars.documentation, this.serverless.config.servicePath);
 
-    generator.parse();
+    await generator.parse();
 
     // Map function configurations
     const funcConfigs = this.serverless.service.getAllFunctions().map((functionName) => {
       const func = this.serverless.service.getFunction(functionName);
-      return merge({ _functionName: functionName }, func);
+      return _.merge({ _functionName: functionName }, func);
     });
 
     // Add Paths to OpenAPI Output from Function Configuration

@@ -1,10 +1,8 @@
-import { JSONSchema7 } from 'json-schema';
-
-export interface IModels {
+export interface IModel {
   name: string;
   description: string;
   contentType: string;
-  schema: JSONSchema7;
+  schema: string;
   examples: any[];
   example: object;
 }
@@ -13,7 +11,7 @@ export interface IDefinitionConfig {
   title: string;
   description: string;
   version?: string;
-  models: IModels[];
+  models: IModel[];
 }
 
 export enum Format {
