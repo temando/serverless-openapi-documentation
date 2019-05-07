@@ -14,8 +14,10 @@ class ServerlessInterface extends Serverless {
 describe('OpenAPI Documentation Generator', () => {
   let sls: ServerlessInterface;
 
+  const servicePath = path.join(__dirname, '../../test/project');
+
   beforeEach(async () => {
-    const servicePath = path.join(__dirname, '../../test/project');
+
     const serverlessYamlPath = path.join(servicePath, './serverless.yml');
     sls = new Serverless();
 
@@ -35,12 +37,12 @@ describe('OpenAPI Documentation Generator', () => {
   });
 
   it('Generates OpenAPI document', async () => {
-    const docGen = new DefinitionGenerator(sls.service.custom.documentation);
+    const docGen = new DefinitionGenerator(sls.service.custom.documentation, servicePath);
     expect(docGen).not.toBeNull();
   });
 
   it('adds paths to OpenAPI output from function configuration', async () => {
-    const docGen = new DefinitionGenerator(sls.service.custom.documentation);
+    const docGen = new DefinitionGenerator(sls.service.custom.documentation, servicePath);
 
     // implementation copied from ServerlessOpenApiDocumentation.ts
     docGen.parse();
