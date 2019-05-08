@@ -1,4 +1,19 @@
 documentation:
+  components:
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://example.com/oauth/authorize
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
+  security:
+    - bearerAuth:
+        - read
+        - write
   models:
     - name: ErrorResponse
       description: This is an error

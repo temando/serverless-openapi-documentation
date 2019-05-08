@@ -62,7 +62,8 @@ describe("OpenAPI Documentation Generator", () => {
     docGen.readFunctions(funcConfigs);
 
     // get the parameters from the `/create POST' endpoint
-    const actual = docGen.definition.paths["/create"].post.parameters;
+    const actual =
+      docGen.definition.paths["/create/{username}"].post.parameters;
     const expected = [
       {
         description: "The username for a user to create",

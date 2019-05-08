@@ -14,7 +14,7 @@ functions:
     handler: handler.create
     events:
       - http:
-          path: create
+          path: create/{username}
           method: post
           documentation:
             summary: Create User

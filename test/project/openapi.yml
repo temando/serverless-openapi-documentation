@@ -185,13 +185,22 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/data'
-  securitySchemes: {}
+  securitySchemes:
+    bearerAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'https://example.com/oauth/authorize'
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
 info:
   title: ''
   description: ''
-  version: 96d3d004-1a24-4384-9df7-1e7416393223
+  version: 6e48be1a-d9be-41ef-95eb-41ffad58eac3
 paths:
-  /create:
+  '/create/{username}':
     post:
       operationId: createUser
       summary: Create User
@@ -239,3 +248,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+security:
+  - bearerAuth:
+      - read
+      - write
