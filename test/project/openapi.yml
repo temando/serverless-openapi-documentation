@@ -198,9 +198,9 @@ components:
 info:
   title: ''
   description: ''
-  version: 1a08e671-e4b5-4d13-babe-a00c86ec8b5d
+  version: 6e48be1a-d9be-41ef-95eb-41ffad58eac3
 paths:
-  /create:
+  '/create/{username}':
     post:
       operationId: createUser
       summary: Create User
