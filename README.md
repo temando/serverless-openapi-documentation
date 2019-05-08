@@ -1,12 +1,11 @@
 # Serverless OpenAPI Documentation Plugin
 
-[![NPM](https://img.shields.io/npm/v/serverless-openapi-documentation.svg)](https://npmjs.org/packages/serverless-openapi-documentation/)
-[![Travis CI](https://img.shields.io/travis/temando/serverless-openapi-documentation.svg)](https://travis-ci.org/temando/serverless-openapi-documentation)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![NPM](https://img.shields.io/npm/v/@conqa/serverless-openapi-documentation.svg)](https://npmjs.org/packages/@conqa/serverless-openapi-documentation/)
+[![Travis CI](https://img.shields.io/travis/conqa/serverless-openapi-documentation.svg)](https://travis-ci.org/conqa/serverless-openapi-documentation)
 
 Generates [**OpenAPI 3.0.0**](https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md) documentation from serverless configuration files. OpenAPI is formerly known as Swagger. The configuration is inspired by the format used in [serverless-aws-documentation](https://www.npmjs.com/package/serverless-aws-documentation).
 
-Works well with [Lincoln OpenAPI Renderer](https://github.com/temando/open-api-renderer).
+Works well with [ReDoc](https://github.com/Rebilly/ReDoc).
 
 ---
 
@@ -20,7 +19,7 @@ Works well with [Lincoln OpenAPI Renderer](https://github.com/temando/open-api-r
     - [`cookieParams`](#cookieparams)
     - [`requestModels`](#requestmodels)
     - [`methodResponses`](#methodresponses)
-- [Example Configuration](#example-configuration)
+- [Example configuration](#example-configuration)
 - [Install](#install)
 
 ---
@@ -60,6 +59,10 @@ custom:
     version: '1'
     title: 'My API'
     description: 'This is my API'
+    # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#securitySchemeObject
+    securitySchemes: {}
+    # https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#security-requirement-object
+    security: {}
     models: {}
 ```
 
@@ -89,22 +92,17 @@ The *required* directives for the models section are as follow:
 * `name`: the name of the schema
 * `description`: a description of the schema
 * `contentType`: the content type of the described request/response (ie. `application/json` or `application/xml`).
-* `schema`: The JSON Schema ([website](http://json-schema.org/)) that describes the model. You can either use inline `YAML` to define these, or refer to an external schema file as below
+* `schema`: The JSON Schema ([website](http://json-schema.org/)) that describes the model. You can either:
+  - use inline `YAML` to define these
+  - use serverless' functionality to merge in external schema file
+  - specify a path to json schema in which case if you reuse some types in multiple schemas - they will be included in resulting components once instead of duplicated for each referencing schema
 
 ```yml
 custom:
   documentation:
     models:
-      - name: "ErrorResponse"
-        description: "This is an error"
-        contentType: "application/json"
-        schema: ${file(models/ErrorResponse.json)}
-      - name: "PutDocumentResponse"
-        description: "PUT Document response model (external reference example)"
-        contentType: "application/json"
-        schema: ${file(models/PutDocumentResponse.json)}
       - name: "PutDocumentRequest"
-        description: "PUT Document request model (inline example)"
+        description: "Inline schema example"
         contentType: "application/json"
         schema:
           $schema: "http://json-schema.org/draft-04/schema#"
@@ -114,6 +112,14 @@ custom:
               properties:
                 SomeAttribute:
                   type: "string"
+      - name: "PutDocumentResponse"
+        description: "External file merge example"
+        contentType: "application/json"
+        schema: ${file(models/PutDocumentResponse.json)}
+      - name: "ErrorResponse"
+        description: "Path to a schema example"
+        contentType: "application/json"
+        schema: models/ErrorResponse.json
 ```
 
 #### Functions
@@ -312,19 +318,19 @@ To add this plugin to your package.json:
 
 **Using npm:**
 ```bash
-npm install serverless-openapi-documentation --save-dev
+npm install @conqa/serverless-openapi-documentation --save-dev
 ```
 
 **Using Yarn:**
 ```bash
-yarn add serverless-openapi-documentation --dev
+yarn add @conqa/serverless-openapi-documentation --dev
 ```
 
 Next you need to add the plugin to the `plugins` section of your `serverless.yml` file.
 
 ```yml
 plugins:
-  - serverless-openapi-documentation
+  - @conqa/serverless-openapi-documentation
 ```
 
 You can confirm the plugin is correctly installed by running:
