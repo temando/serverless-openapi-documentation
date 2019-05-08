@@ -196,9 +196,9 @@ components:
             write: Grants write access
             admin: Grants access to admin operations
 info:
-  title: ''
+  title: Site API
   description: ''
-  version: dfdb63df-5e16-4df6-a915-3e64601a7a2c
+  version: v1.0.0
 paths:
   '/create/{username}':
     post:
