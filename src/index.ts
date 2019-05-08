@@ -1,4 +1,4 @@
-import { ServerlessOpenApiDocumentation } from './ServerlessOpenApiDocumentation';
+import { ServerlessOpenApiDocumentation } from "./ServerlessOpenApiDocumentation";
 
 // tslint:disable-next-line no-default-export
 export default ServerlessOpenApiDocumentation;

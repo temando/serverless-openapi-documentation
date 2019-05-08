@@ -1,38 +1,38 @@
-import { JSONSchema7 } from 'json-schema';
+import { JSONSchema7 } from "json-schema";
 
-export interface IModel {
+export interface Model {
   name: string;
   description: string;
   contentType: string;
   schema: string | JSONSchema7;
-  examples: any[];
+  examples: Array<any>;
   example: object;
 }
 
-export interface IDefinitionConfig {
+export interface DefinitionConfig {
   title: string;
   description: string;
   version?: string;
-  models: IModel[];
+  models: Array<Model>;
 }
 
 export enum Format {
-  yaml = 'yaml',
-  json = 'json',
+  yaml = "yaml",
+  json = "json"
 }
 
-export interface IDefinitionType {
+export interface DefinitionType {
   file: string;
   format: Format;
   indent: number;
 }
 
-export interface IServerlessFunctionConfig {
+export interface ServerlessFunctionConfig {
   _functionName: string;
   handler: string;
   description?: string;
   environment?: object;
-  events?: any[];
+  events?: Array<any>;
 }
 
 // TODO: We could use another TS based OpenAPI project to get type information
@@ -40,48 +40,48 @@ export interface IServerlessFunctionConfig {
 // @see https://github.com/Mermade/awesome-openapi3#parsersmodelsvalidators
 
 // @see https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md#operation-object
-export interface IOperation {
-  tags?: string[];
+export interface Operation {
+  tags?: Array<string>;
   summary?: string;
   description?: string;
   externalDocs?: any;
   operationId?: string;
-  parameters?: IParameterConfig[];
+  parameters?: Array<ParameterConfig>;
   requestBody?: any;
   responses?: any;
   callbacks?: any;
   deprecated?: boolean;
-  security?: any[];
-  servers?: any[];
+  security?: Array<any>;
+  servers?: Array<any>;
 }
 
 // @see https://github.com/OAI/OpenAPI-Specification/blob/3.0.0/versions/3.0.0.md#parameterObject
-export interface IParameterConfig {
+export interface ParameterConfig {
   name: string;
-  in: 'path' | 'query' | 'header' | 'cookie';
+  in: "path" | "query" | "header" | "cookie";
   description: string;
   required?: boolean;
   schema?: object;
   deprecated?: boolean;
   allowEmptyValue?: boolean;
-  style?: 'form' | 'simple';
+  style?: "form" | "simple";
   explode?: boolean;
   allowReserved?: boolean;
   example?: any;
-  examples?: any[];
+  examples?: Array<any>;
   content?: Map<string, any>;
 }
 
 // FIXME:
-export interface IDefinition {
+export interface Definition {
   openapi: string;
-  info: any;
-  servers?: any[];
-  paths: any;
+  info?: any;
+  servers?: Array<any>;
+  paths?: any;
   components?: any;
-  security?: any[];
-  tags?: any[];
-  externalDocs: any;
+  security?: Array<any>;
+  tags?: Array<any>;
+  externalDocs?: any;
 }
 
-export type ILog = (...str: string[]) => void;
+export type ILog = (...str: Array<string>) => void;
