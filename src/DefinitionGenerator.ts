@@ -273,7 +273,7 @@ export class DefinitionGenerator {
             schema: {
               $ref: `#/components/schemas/${
                 documentationConfig.requestModels[requestModelType]
-                }`
+              }`
             }
           };
 
