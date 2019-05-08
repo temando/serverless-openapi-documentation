@@ -16,6 +16,7 @@ export interface DefinitionConfig {
   version?: string;
   securitySchemes: OpenAPIV3.SecuritySchemeObject;
   security: Array<OpenAPIV3.SecurityRequirementObject>;
+  servers: Array<OpenAPIV3.ServerObject>;
   models: Array<Model>;
 }
 

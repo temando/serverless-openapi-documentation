@@ -196,9 +196,9 @@ components:
             write: Grants write access
             admin: Grants access to admin operations
 info:
-  title: ''
+  title: Site API
   description: ''
-  version: 6e48be1a-d9be-41ef-95eb-41ffad58eac3
+  version: v1.0.0
 paths:
   '/create/{username}':
     post:
@@ -252,3 +252,17 @@ security:
   - bearerAuth:
       - read
       - write
+servers:
+  - url: 'https://{customerId}.saas-app.com:{port}/v2'
+    description: Production server (uses live data)
+    variables:
+      customerId:
+        default: demo
+        description: Customer ID assigned by the service provider
+      port:
+        enum:
+          - '443'
+          - '8443'
+        default: '443'
+  - url: 'https://sandbox-api.example.com:8443/v1'
+    description: Sandbox server (uses test data)
