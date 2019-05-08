@@ -1,4 +1,5 @@
 import { JSONSchema7 } from "json-schema";
+import { OpenAPIV3 } from "openapi-types";
 
 export interface Model {
   name: string;
@@ -13,6 +14,8 @@ export interface DefinitionConfig {
   title: string;
   description: string;
   version?: string;
+  securitySchemes: OpenAPIV3.SecuritySchemeObject;
+  security: Array<OpenAPIV3.SecurityRequirementObject>;
   models: Array<Model>;
 }
 

@@ -40,7 +40,9 @@ export class DefinitionGenerator {
       title = "",
       description = "",
       version = uuid.v4(),
-      models
+      models,
+      security,
+      securitySchemes
     } = this.config;
 
     _.merge(this.definition, {
@@ -48,10 +50,17 @@ export class DefinitionGenerator {
       info: { title, description, version },
       paths: {},
       components: {
-        schemas: {},
-        securitySchemes: {}
+        schemas: {}
       }
     });
+
+    if (security) {
+      this.definition.security = security;
+    }
+
+    if (securitySchemes) {
+      this.definition.components.securitySchemes = securitySchemes;
+    }
 
     this.definition.components.schemas = await parseModels(models, this.root);
 
