@@ -14,6 +14,20 @@ documentation:
     - bearerAuth:
         - read
         - write
+  servers:
+    - url: https://{customerId}.saas-app.com:{port}/v2
+      description: Production server (uses live data)
+      variables:
+        customerId:
+          default: demo
+          description: Customer ID assigned by the service provider
+        port:
+          enum:
+            - "443"
+            - "8443"
+          default: "443"
+    - url: https://sandbox-api.example.com:8443/v1
+      description: Sandbox server (uses test data)
   models:
     - name: ErrorResponse
       description: This is an error

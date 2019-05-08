@@ -42,7 +42,8 @@ export class DefinitionGenerator {
       version = uuid.v4(),
       models,
       security,
-      securitySchemes
+      securitySchemes,
+      servers
     } = this.config;
 
     _.merge(this.definition, {
@@ -60,6 +61,10 @@ export class DefinitionGenerator {
 
     if (securitySchemes) {
       this.definition.components.securitySchemes = securitySchemes;
+    }
+
+    if (servers) {
+      this.definition.servers = servers;
     }
 
     this.definition.components.schemas = await parseModels(models, this.root);
@@ -268,7 +273,7 @@ export class DefinitionGenerator {
             schema: {
               $ref: `#/components/schemas/${
                 documentationConfig.requestModels[requestModelType]
-              }`
+                }`
             }
           };
 
