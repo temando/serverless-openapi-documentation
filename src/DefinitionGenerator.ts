@@ -30,16 +30,23 @@ export class DefinitionGenerator {
       title = '',
       description = '',
       version = uuid.v4(),
+      servers = [],
       models,
+      security = [],
     } = this.config;
 
     merge(this.definition, {
       openapi: this.version,
       info: { title, description, version },
+      servers,
       paths: {},
       components: {
         schemas: {},
-        securitySchemes: {},
+        securitySchemes: security.reduce((result, s) => {
+          const { authorizerName, name, ...rest } = s;
+          result[name] = rest;
+          return result;
+        }, {}),
       },
     });
 
@@ -87,7 +94,7 @@ export class DefinitionGenerator {
             [`/${httpEventConfig.path}`]: {
               [httpEventConfig.method.toLowerCase()]: this.getOperationFromConfig(
                 funcConfig._functionName,
-                httpEventConfig.documentation,
+                httpEventConfig,
               ),
             },
           };
@@ -123,7 +130,8 @@ export class DefinitionGenerator {
    * @param funcName
    * @param documentationConfig
    */
-  private getOperationFromConfig (funcName: string, documentationConfig): IOperation {
+  private getOperationFromConfig (funcName: string, config): IOperation {
+    const documentationConfig = config.documentation;
     const operationObj: IOperation = {
       operationId: funcName,
     };
@@ -144,15 +152,20 @@ export class DefinitionGenerator {
       operationObj.deprecated = true;
     }
 
-    if (operationObj.requestBody) {
+    if (documentationConfig.requestModels) {
       operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
     }
 
-    if (operationObj.parameters) {
-      operationObj.parameters = this.getParametersFromConfig(documentationConfig);
-    }
+    operationObj.parameters = this.getParametersFromConfig(documentationConfig);
 
     operationObj.responses = this.getResponsesFromConfig(documentationConfig);
+
+    if (config.authorizer && this.config.security) {
+      const security = this.config.security.find((s) => s.authorizerName === config.authorizer.name);
+      if (security) {
+        operationObj.security = [{ [security.name]: [] }];
+      }
+    }
 
     return operationObj;
   }
@@ -280,7 +293,7 @@ export class DefinitionGenerator {
   }
 
   private attachExamples (target, config) {
-    if (target.examples && Array.isArray(target.examples)) {
+    if (target.examples) {
       merge(config, { examples: clone(target.examples) });
     } else if (target.example) {
       merge(config, { example: clone(target.example) });

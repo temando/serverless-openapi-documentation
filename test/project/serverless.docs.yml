@@ -38,6 +38,9 @@ endpoints:
           application/json: ErrorResponse
 
 documentation:
+  title: "a title"
+  version: "1.2",
+  description: "a description"
   models:
     - name: ErrorResponse
       description: This is an error

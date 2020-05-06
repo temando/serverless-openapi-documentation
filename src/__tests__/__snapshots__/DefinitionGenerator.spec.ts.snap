@@ -1,0 +1,269 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenAPI Documentation Generator Generates OpenAPI document 1`] = `
+Object {
+  "components": Object {
+    "schemas": Object {
+      "ErrorResponse": Object {
+        "additionalProperties": false,
+        "description": "This is a schema for responses in the JSON API format. For more, see http://jsonapi.org",
+        "properties": Object {
+          "errors": Object {
+            "items": Object {
+              "additionalProperties": false,
+              "properties": Object {
+                "code": Object {
+                  "description": "An application-specific error code, expressed as a string value.",
+                  "type": "string",
+                },
+                "detail": Object {
+                  "description": "A human-readable explanation specific to this occurrence of the problem.",
+                  "type": "string",
+                },
+                "id": Object {
+                  "description": "A unique identifier for this particular occurrence of the problem.",
+                  "type": "string",
+                },
+                "links": Object {
+                  "additionalProperties": true,
+                  "description": "A resource object **MAY** contain references to other resource objects (\\"relationships\\"). Relationships may be to-one or to-many. Relationships can be specified by including a member in a resource's links object.",
+                  "properties": Object {
+                    "related": Object {
+                      "description": "A link **MUST** be represented as either: a string containing the link's URL or a link object.",
+                      "oneOf": Array [
+                        Object {
+                          "description": "A string containing the link's URL.",
+                          "format": "uri",
+                          "type": "string",
+                        },
+                        Object {
+                          "properties": Object {
+                            "href": Object {
+                              "description": "A string containing the link's URL.",
+                              "format": "uri",
+                              "type": "string",
+                            },
+                            "meta": Object {
+                              "additionalProperties": true,
+                              "description": "Non-standard meta-information that can not be represented as an attribute or relationship.",
+                              "type": "object",
+                            },
+                          },
+                          "required": Array [
+                            "href",
+                          ],
+                          "type": "object",
+                        },
+                      ],
+                    },
+                    "self": Object {
+                      "description": "A \`self\` member, whose value is a URL for the relationship itself (a \\"relationship URL\\"). This URL allows the client to directly manipulate the relationship. For example, it would allow a client to remove an \`author\` from an \`article\` without deleting the people resource itself.",
+                      "format": "uri",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "meta": Object {
+                  "additionalProperties": true,
+                  "description": "Non-standard meta-information that can not be represented as an attribute or relationship.",
+                  "type": "object",
+                },
+                "source": Object {
+                  "properties": Object {
+                    "parameter": Object {
+                      "description": "A string indicating which query parameter caused the error.",
+                      "type": "string",
+                    },
+                    "pointer": Object {
+                      "description": "A JSON Pointer [RFC6901] to the associated entity in the request document [e.g. \\"/data\\" for a primary data object, or \\"/data/attributes/title\\" for a specific attribute].",
+                      "type": "string",
+                    },
+                  },
+                  "type": "object",
+                },
+                "status": Object {
+                  "description": "The HTTP status code applicable to this problem, expressed as a string value.",
+                  "type": "string",
+                },
+                "title": Object {
+                  "description": "A short, human-readable summary of the problem. It **SHOULD NOT** change from occurrence to occurrence of the problem, except for purposes of localization.",
+                  "type": "string",
+                },
+              },
+              "type": "object",
+            },
+            "type": "array",
+            "uniqueItems": true,
+          },
+          "links": Object {
+            "additionalProperties": true,
+            "description": "A resource object **MAY** contain references to other resource objects (\\"relationships\\"). Relationships may be to-one or to-many. Relationships can be specified by including a member in a resource's links object.",
+            "properties": Object {
+              "related": Object {
+                "description": "A link **MUST** be represented as either: a string containing the link's URL or a link object.",
+                "oneOf": Array [
+                  Object {
+                    "description": "A string containing the link's URL.",
+                    "format": "uri",
+                    "type": "string",
+                  },
+                  Object {
+                    "properties": Object {
+                      "href": Object {
+                        "description": "A string containing the link's URL.",
+                        "format": "uri",
+                        "type": "string",
+                      },
+                      "meta": Object {
+                        "additionalProperties": true,
+                        "description": "Non-standard meta-information that can not be represented as an attribute or relationship.",
+                        "type": "object",
+                      },
+                    },
+                    "required": Array [
+                      "href",
+                    ],
+                    "type": "object",
+                  },
+                ],
+              },
+              "self": Object {
+                "description": "A \`self\` member, whose value is a URL for the relationship itself (a \\"relationship URL\\"). This URL allows the client to directly manipulate the relationship. For example, it would allow a client to remove an \`author\` from an \`article\` without deleting the people resource itself.",
+                "format": "uri",
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+          "meta": Object {
+            "additionalProperties": true,
+            "description": "Non-standard meta-information that can not be represented as an attribute or relationship.",
+            "type": "object",
+          },
+        },
+        "required": Array [
+          "errors",
+        ],
+        "title": "JSON API Schema",
+        "type": "object",
+      },
+      "PutDocumentRequest": Object {
+        "properties": Object {
+          "SomeObject": Object {
+            "properties": Object {
+              "SomeAttribute": Object {
+                "type": "string",
+              },
+            },
+            "type": "object",
+          },
+        },
+      },
+      "PutDocumentResponse": Object {
+        "title": "Empty Schema",
+        "type": "object",
+      },
+    },
+    "securitySchemes": Object {
+      "auth": Object {
+        "scheme": "bearer",
+        "type": "http",
+      },
+    },
+  },
+  "info": Object {
+    "description": "a description",
+    "title": "a title",
+    "version": "1.2",
+  },
+  "openapi": "3.0.0",
+  "paths": Object {
+    "/create": Object {
+      "post": Object {
+        "description": "Creates a user and then sends a generated password email",
+        "operationId": "createUser",
+        "parameters": Array [
+          Object {
+            "description": "The username for a user to create",
+            "in": "path",
+            "name": "username",
+            "required": true,
+            "schema": Object {
+              "pattern": "^[-a-z0-9_]+$",
+              "type": "string",
+            },
+          },
+          Object {
+            "allowEmptyValue": false,
+            "description": "The user's Membership Type",
+            "in": "query",
+            "name": "membershipType",
+            "required": false,
+            "schema": Object {
+              "enum": Array [
+                "premium",
+                "standard",
+              ],
+              "type": "string",
+            },
+          },
+          Object {
+            "description": "A Session ID variable",
+            "in": "cookie",
+            "name": "SessionId",
+            "required": false,
+            "schema": Object {
+              "type": "string",
+            },
+          },
+        ],
+        "requestBody": Object {
+          "content": Object {
+            "application/json": Object {
+              "schema": Object {
+                "$ref": "#/components/schemas/PutDocumentRequest",
+              },
+            },
+          },
+          "description": "A user information object",
+        },
+        "responses": Object {
+          "201": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/PutDocumentResponse",
+                },
+              },
+            },
+            "description": "A user object along with generated API Keys",
+          },
+          "500": Object {
+            "content": Object {
+              "application/json": Object {
+                "schema": Object {
+                  "$ref": "#/components/schemas/ErrorResponse",
+                },
+              },
+            },
+            "description": "An error message when creating a new user",
+          },
+        },
+        "security": Array [
+          Object {
+            "auth": Array [],
+          },
+        ],
+        "summary": "Create User",
+      },
+    },
+  },
+  "servers": Array [
+    Object {
+      "description": "Dev server",
+      "url": "https://example.com",
+    },
+  ],
+}
+`;

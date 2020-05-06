@@ -1,8 +1,8 @@
 {
   "name": "serverless-openapi-documentation",
-  "version": "0.4.0",
+  "version": "0.4.5",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/temando/serverless-openapi-documentation.git"
@@ -31,7 +31,8 @@
     "test:prepare": "scripts/prepareTests.bash",
     "build:link": "yarn build && cd build && yarn link",
     "build:watch": "yarn build && tsc --watch",
-    "build": "scripts/build.bash"
+    "build": "scripts/build.bash",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
@@ -42,19 +43,19 @@
     "@types/node": "^8.0.7",
     "@types/uuid": "^3.0.0",
     "changelog-verify": "^1.0.4",
-    "jest": "^20.0.4",
-    "serverless": "^1.16.1",
-    "ts-jest": "^20.0.6",
+    "jest": "^24.5.0",
+    "serverless": "^1.38.0",
+    "ts-jest": "^24.0.0",
     "ts-node": "^3.1.0",
     "tslint": "^5.4.3",
     "tslint-config-temando": "^1.1.4",
-    "typescript": "^2.4.1",
+    "typescript": "^3.3.3333",
     "version-changelog": "^2.1.0"
   },
   "dependencies": {
-    "@jdw/jst": "^2.0.0-beta.9",
+    "@jdw/jst": "^2.0.0-beta.15",
     "bluebird": "^3.5.0",
-    "chalk": "^2.0.1",
+    "chalk": "^1.1.3",
     "fs-extra": "^4.0.1",
     "js-yaml": "^3.8.4",
     "lutils": "^2.4.0",
