@@ -2,7 +2,7 @@
   "name": "serverless-openapi-documentation",
   "version": "0.4.5",
   "description": "Serverless 1.0 plugin to generate OpenAPI V3 documentation from serverless configuration",
-  "main": "dist/index.js",
+  "main": "build/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/temando/serverless-openapi-documentation.git"
