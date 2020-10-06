@@ -112,10 +112,10 @@ class DefinitionGenerator {
         if (documentationConfig.deprecated) {
             operationObj.deprecated = true;
         }
-        if (operationObj.requestBody) {
+        if (documentationConfig.requestBody) {
             operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
         }
-        if (operationObj.parameters) {
+        if (documentationConfig.parameters) {
             operationObj.parameters = this.getParametersFromConfig(documentationConfig);
         }
         operationObj.responses = this.getResponsesFromConfig(documentationConfig);
