@@ -13,6 +13,7 @@ export interface IDefinitionConfig {
   description: string;
   version?: string;
   models: IModels[];
+  servers: any[];
 }
 
 export interface IDefinitionType {

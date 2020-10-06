@@ -31,11 +31,13 @@ export class DefinitionGenerator {
       description = '',
       version = uuid.v4(),
       models,
+      servers
     } = this.config;
 
     merge(this.definition, {
       openapi: this.version,
       info: { title, description, version },
+      servers: servers,
       paths: {},
       components: {
         schemas: {},
