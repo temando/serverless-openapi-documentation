@@ -31,11 +31,13 @@ export class DefinitionGenerator {
       description = '',
       version = uuid.v4(),
       models,
+      servers
     } = this.config;
 
     merge(this.definition, {
       openapi: this.version,
       info: { title, description, version },
+      servers: servers,
       paths: {},
       components: {
         schemas: {},
@@ -144,11 +146,11 @@ export class DefinitionGenerator {
       operationObj.deprecated = true;
     }
 
-    if (operationObj.requestBody) {
+    if (documentationConfig.requestBody) {
       operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
     }
 
-    if (operationObj.parameters) {
+    if (documentationConfig.parameters) {
       operationObj.parameters = this.getParametersFromConfig(documentationConfig);
     }
 
