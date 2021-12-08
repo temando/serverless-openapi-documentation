@@ -26,12 +26,8 @@ interface Service {
   custom: CustomVars;
 }
 
-interface Variables {
-  service: Service;
-}
-
 interface FullServerless extends Serverless {
-  variables: Variables;
+  service: Service;
   processedInput: ProcessedInput;
 }
 
@@ -53,7 +49,7 @@ export class ServerlessOpenApiDocumentation {
     // pull the serverless instance into our class vars
     this.serverless = serverless;
     // Serverless service custom variables
-    this.customVars = this.serverless.variables.service.custom;
+    this.customVars = this.serverless.service.custom;
 
     // Declare the commands this plugin exposes for the Serverless CLI
     this.commands = {
