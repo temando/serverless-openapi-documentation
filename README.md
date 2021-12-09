@@ -1,3 +1,9 @@
+# THIS PLUGIN IS UNMAINTAINED
+
+Please note, this plugin is not maintained, while you can use the resulting plugin, it is not being updated in any way.
+
+Issues and PRs are not reviewed or accepted. Feel free to Fork and continue if this plugin is useful to you, it's not currently being used by the original maintainers.
+
 # Serverless OpenAPI Documentation Plugin
 
 [![NPM](https://img.shields.io/npm/v/@conqa/serverless-openapi-documentation.svg)](https://npmjs.org/packages/@conqa/serverless-openapi-documentation/)
