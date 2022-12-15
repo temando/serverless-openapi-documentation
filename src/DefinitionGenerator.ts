@@ -10,7 +10,7 @@ export class DefinitionGenerator {
   public version = '3.0.0';
 
   // Base configuration object
-  public definition = <IDefinition> {
+  public definition = <IDefinition>{
     openapi: this.version,
     components: {},
   };
@@ -21,11 +21,11 @@ export class DefinitionGenerator {
    * Constructor
    * @param serviceDescriptor IServiceDescription
    */
-  constructor (config: IDefinitionConfig) {
+  constructor(config: IDefinitionConfig) {
     this.config = clone(config);
   }
 
-  public parse () {
+  public parse() {
     const {
       title = '',
       description = '',
@@ -58,7 +58,7 @@ export class DefinitionGenerator {
     return this;
   }
 
-  public validate (): { valid: boolean, context: string[], warnings: any[], error?: any[] } {
+  public validate(): { valid: boolean, context: string[], warnings: any[], error?: any[] } {
     const payload: any = {};
 
     try {
@@ -74,7 +74,7 @@ export class DefinitionGenerator {
    * Add Paths to OpenAPI Configuration from Serverless function documentation
    * @param config Add
    */
-  public readFunctions (config: IServerlessFunctionConfig[]): void {
+  public readFunctions(config: IServerlessFunctionConfig[]): void {
     // loop through function configurations
     for (const funcConfig of config) {
       // loop through http events
@@ -103,7 +103,7 @@ export class DefinitionGenerator {
    * Cleans schema objects to make them OpenAPI compatible
    * @param schema JSON Schema Object
    */
-  private cleanSchema (schema) {
+  private cleanSchema(schema) {
     // Clone the schema for manipulation
     const cleanedSchema = clone(schema);
 
@@ -123,7 +123,7 @@ export class DefinitionGenerator {
    * @param funcName
    * @param documentationConfig
    */
-  private getOperationFromConfig (funcName: string, documentationConfig): IOperation {
+  private getOperationFromConfig(funcName: string, documentationConfig): IOperation {
     const operationObj: IOperation = {
       operationId: funcName,
     };
@@ -144,11 +144,12 @@ export class DefinitionGenerator {
       operationObj.deprecated = true;
     }
 
-    if (operationObj.requestBody) {
+    if (documentationConfig.requestBody) {
       operationObj.requestBody = this.getRequestBodiesFromConfig(documentationConfig);
     }
 
-    if (operationObj.parameters) {
+    const { pathParams, queryParams, requestHeaders, cookieParams } = documentationConfig;
+    if ([pathParams, queryParams, requestHeaders, cookieParams].some(p => Boolean(p))) {
       operationObj.parameters = this.getParametersFromConfig(documentationConfig);
     }
 
@@ -161,7 +162,7 @@ export class DefinitionGenerator {
    * Derives Path, Query and Request header parameters from Serverless documentation
    * @param documentationConfig
    */
-  private getParametersFromConfig (documentationConfig): IParameterConfig[] {
+  private getParametersFromConfig(documentationConfig): IParameterConfig[] {
     const parameters: IParameterConfig[] = [];
 
     // Build up parameters from configuration for each parameter type
@@ -236,7 +237,7 @@ export class DefinitionGenerator {
    * Derives request body schemas from event documentation configuration
    * @param documentationConfig
    */
-  private getRequestBodiesFromConfig (documentationConfig) {
+  private getRequestBodiesFromConfig(documentationConfig) {
     const requestBodies = {};
 
     if (!documentationConfig.requestModels) {
@@ -279,7 +280,7 @@ export class DefinitionGenerator {
     return requestBodies;
   }
 
-  private attachExamples (target, config) {
+  private attachExamples(target, config) {
     if (target.examples && Array.isArray(target.examples)) {
       merge(config, { examples: clone(target.examples) });
     } else if (target.example) {
@@ -291,7 +292,7 @@ export class DefinitionGenerator {
    * Gets response bodies from documentation config
    * @param documentationConfig
    */
-  private getResponsesFromConfig (documentationConfig) {
+  private getResponsesFromConfig(documentationConfig) {
     const responses = {};
     if (documentationConfig.methodResponses) {
       for (const response of documentationConfig.methodResponses) {
@@ -325,7 +326,7 @@ export class DefinitionGenerator {
     return responses;
   }
 
-  private getResponseContent (response) {
+  private getResponseContent(response) {
     const content = {};
 
     for (const responseKey of Object.keys(response)) {
@@ -342,14 +343,14 @@ export class DefinitionGenerator {
 
         this.attachExamples(responseModel, resModelConfig);
 
-        merge(content, { [responseKey] : resModelConfig });
+        merge(content, { [responseKey]: resModelConfig });
       }
     }
 
     return content;
   }
 
-  private getHttpEvents (funcConfig) {
+  private getHttpEvents(funcConfig) {
     return funcConfig.filter((event) => event.http ? true : false);
   }
 }
